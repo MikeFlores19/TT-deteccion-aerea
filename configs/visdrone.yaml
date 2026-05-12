@@ -1,0 +1,26 @@
+# Configuración del dataset VisDrone-DET2019
+#Detección de objetos desde perspectiva aérea
+
+path: data/visdrone
+
+train: images/train
+val:   images/val
+test:  images/test
+
+labels:
+  train: labels/train
+  val:   labels/val
+  test:  labels/test
+
+nc: 10
+names:
+  0: pedestrian
+  1: people
+  2: bicycle
+  3: car
+  4: van
+  5: truck
+  6: tricycle
+  7: awning-tricycle
+  8: bus
+  9: motor
