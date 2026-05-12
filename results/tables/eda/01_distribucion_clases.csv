@@ -1,0 +1,11 @@
+class,detecciones,porcentajes
+car,144865,42.21
+pedestrian,79335,23.12
+motor,29642,8.64
+people,27059,7.88
+van,24950,7.27
+truck,12871,3.75
+bicycle,10477,3.05
+bus,5926,1.73
+tricycle,4803,1.4
+awning-tricycle,3243,0.95
