@@ -4,9 +4,6 @@
 # Datasets (demasiado pesados para git)
 data/
 
-# Outputs de entrenamiento
-runs/
-
 # Python
 __pycache__/
 *.pyc
@@ -15,9 +12,6 @@ __pycache__/
 
 # Modelos compilados (device-specific)
 *.engine
-
-# Modelos grandes
-*.pt
 
 # VS Code
 .vscode/
