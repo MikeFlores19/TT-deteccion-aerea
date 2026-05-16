@@ -1,0 +1,5 @@
+dificultad,detecciones,porcentaje
+solo ocluido,170978,49.82
+sin problemas,158822,46.28
+solo truncado,8455,2.46
+truncado + ocluido,4916,1.43

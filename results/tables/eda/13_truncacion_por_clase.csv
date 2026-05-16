@@ -1,0 +1,11 @@
+class,truncation
+bus,8.54
+truck,7.24
+van,5.54
+car,5.31
+awning-tricycle,4.13
+tricycle,3.14
+bicycle,2.45
+pedestrian,1.91
+motor,1.87
+people,0.95

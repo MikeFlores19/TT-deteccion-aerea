@@ -1,0 +1,6 @@
+Métrica,VisDrone,UAVDT
+Imágenes (train),"6,470","1,266"
+Detecciones (train),"343,171","35,007"
+Número de clases,10,3
+Ratio de desbalance,44.7x,119.1x
+Densidad media (obj/img),53.0,27.7

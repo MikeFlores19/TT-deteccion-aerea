@@ -1,0 +1,17 @@
+# Configuración del dataset UAVDT
+path: data/uavdt
+
+train: images/train
+val:   images/val
+test:  images/test
+
+labels:
+  train: labels/train
+  val:   labels/val
+  test:  labels/test
+
+nc: 3
+names:
+  0: car
+  1: truck
+  2: bus
