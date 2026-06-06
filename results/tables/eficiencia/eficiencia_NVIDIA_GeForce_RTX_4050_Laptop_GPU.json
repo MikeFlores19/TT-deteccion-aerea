@@ -1,0 +1,12 @@
+{
+  "yolov8n_mosaic10": {
+    "weights": "/home/magicmike/TT-deteccion-aerea/runs/yolov8n/yolov8n_mosaic10_20260606_0315/weights/best.pt",
+    "n_images": 1610,
+    "imgsz": 1280,
+    "device": "0",
+    "latency_ms": 4.41,
+    "fps": 226.58,
+    "vram_mb": 72.8,
+    "ram_mb": 1201.8
+  }
+}
