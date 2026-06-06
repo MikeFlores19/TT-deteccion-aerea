@@ -67,33 +67,66 @@ Alumnos: Miguel Alejandro Flores Sotelo, Sergio de Jesús Castillo Molano.
 
 ## Estado actual del proyecto
 - VisDrone-DET2019: organizado con splits train/val/test ✅
-- UAVDT: zip no descargado todavía, carpetas vacías ⏳
-- configs/visdrone.yaml: creado ✅
-- EDA VisDrone — Paso 1 (parseo de anotaciones → DataFrame): EJECUTADO ✅
-  - 343,171 detecciones válidas en train
-  - 6,470 imágenes únicas
-  - 10 clases presentes
-  - Pendiente: el usuario está revisando y entendiendo el código del Paso 1
-- EDA VisDrone — Pasos 2-8: pendiente ⏳
-- EDA UAVDT: pendiente ⏳
-- Preprocesamiento y augmentación: pendiente ⏳
-- Entrenamiento YOLOv8n: pendiente ⏳
-- Entrenamiento RT-DETR: pendiente ⏳
+- VisDrone: conversión de labels a formato YOLO ✅ (convert_visdrone_to_yolo.py, verificada en figura 18)
+- UAVDT: anotaciones procesadas parcialmente ✅ (distribución de clases + comparativa VisDrone↔UAVDT); zip de imágenes aún pendiente ⏳
+- configs/visdrone.yaml y configs/uavdt.yaml: creados ✅
+- EDA VisDrone: COMPLETO ✅ (18 figuras + 15 tablas en results/, notebook 01_eda_visdrone.ipynb)
+- EDA UAVDT: iniciado ✅ (notebook 02_eda_uavdt.ipynb, distribución de clases)
+- Preprocesamiento: notebook 03_preprocesamiento.ipynb ✅
+- Entrenamiento YOLOv8n: COMPLETO ✅
+  - 100 épocas, imgsz=1280, batch=4, AdamW, lr0=0.001, AMP
+  - mAP@0.5=0.4735 · mAP@0.5:0.95=0.2859 · precisión=0.5795 · recall=0.4693
+  - Mejor clase: car (0.853). Peores: bicycle (0.241), awning-tricycle (0.191)
+  - Resultados en runs/yolov8n/yolov8n_visdrone_20260515_1815/
+- Entrenamiento RT-DETR-L: EN CURSO ⏳
+  - Script listo (src/training/train_rtdetr.py), pesos rtdetr-l.pt descargados
+  - Entrenando en Google Colab (A100); OOM determinista en época 25, run no completado
+  - runs/rtdetr/ aún vacío
 - Evaluación y comparativa de modelos: pendiente ⏳
-- Integración de tracking (DeepSORT / ByteTrack): pendiente ⏳
-- Deployment en Jetson Orin Nano: pendiente ⏳
+- Integración de tracking (DeepSORT / ByteTrack): pendiente ⏳ (src/tracking/ vacío)
+- Streaming RTSP y georreferenciación con Pixhawk: pendiente ⏳
+- Deployment en Jetson Orin Nano: pendiente ⏳ (deployment/ vacío)
+
+### Hallazgos técnicos pendientes de atender
+- configs/visdrone.yaml tiene un bloque `labels:` que Ultralytics IGNORA (deriva labels sustituyendo images/→labels/). Funcionó por coincidencia de estructura; conviene limpiarlo.
+- Comentario erróneo en los scripts de train: copy_paste y mosaic NO balancean clases minoritarias a propósito (ver área 3 de la revisión).
+- Pesos sueltos sin trackear bien: rtdetr-l.pt y yolov8n.pt en raíz, yolo26n.pt (¿de dónde salió?), y rtdetr-l.pt duplicado en src/training/.
 
 ## Último paso realizado
-Sesión 2026-05-06:
-- Revisión a fondo del Protocolo TT y del template de tesis (Tesis_UPIIT.pdf)
-- Confirmación del estado real de los datasets (VisDrone organizado, UAVDT vacío)
-- Hallazgo clave: labels de VisDrone en formato original, no YOLO
-- Creación de configs/visdrone.yaml
-- Creación de notebooks/01_eda_visdrone.ipynb
-- Ejecución del Paso 1 del EDA: parseo de anotaciones → DataFrame (343,171 detecciones)
-- Explicación línea por línea del código del Paso 1 al usuario
+Sesión 2026-06-03:
+- Se redactó por completo el documento de revisión de las 6 áreas + anexo:
+  docs/revision_mejoras/revision_6puntos.{md,pdf} (fuente Markdown + PDF generado
+  con docs/revision_mejoras/build_pdf.py, usando markdown + fpdf2).
+- Decisiones tomadas en la revisión:
+  - Área 3 (desbalance): OPCIÓN B — no se aplica rebalanceo artificial; el
+    desbalance se trata como eje de análisis (reportar AP/F1 por clase). Verificado
+    en código: YOLOv8 usa BCE (utils/loss.py); RT-DETR usa focal/varifocal por
+    defecto (nn/tasks.py: use_vfl=True).
+  - Área 4: YOLOv8n (3.16M params) vs RT-DETR-L (32.97M, backbone HGNetv2);
+    asimetría ~10x reconocida como hallazgo. NO cambiar a ResNet-50.
+  - Área 6: ya se hace fine-tuning (cargar .pt = ajuste desde COCO). Mejoras a
+    aplicar: más épocas (YOLOv8n no se cortó en 100), ajuste de LR/cosine, SAHI en
+    inferencia. NO ResNet-50.
+  - Anexo: entrenar en RunPod (recomendado); Vast.ai más barato; Kaggle gratis para
+    YOLOv8n. El OOM de RT-DETR en Colab es probablemente RAM de sistema, no VRAM.
 
 ## Siguiente paso
-Continuar con el Paso 2 del EDA: distribución de clases.
-El usuario ya entiende el Paso 1. Al iniciar la siguiente sesión, retomar desde
-el Paso 2 en notebooks/01_eda_visdrone.ipynb.
+SESIÓN DE MAÑANA: iniciar la FASE DE IMPLEMENTACIÓN (meter mano al código), en un
+solo paquete antes de reentrenar. Pendientes acordados:
+  1. Montar entorno en RunPod.
+  2. Instrumentar métricas en los scripts: agregar F1 (y FLOPs/params) a
+     train_yolov8n.py y train_rtdetr.py (bloque de metrics dict). Ver
+     memoria project_instrumentar_metricas_pendiente.
+  3. Crear script de benchmark (p. ej. src/evaluation/benchmark.py) para
+     latencia/FPS/VRAM/RAM en inferencia (laptop + Jetson).
+  4. Aplicar mejoras de entrenamiento decididas (épocas/LR) y reentrenar ambos.
+NOTA: el área 3 NO modifica los scripts de entrenamiento (opción B).
+ALCANCE: UAVDT YA está descargado completo (train 1266/val 271/test 272, labels YOLO). Pero la
+validación cruzada de generalización VisDrone->UAVDT se reserva para el TT 2da versión (TT2);
+en esta versión el alcance llega hasta el punto 5, no se hace generalización.
+Benchmark de eficiencia (latencia/FPS/VRAM/RAM): en TT1 se hace en la LAPTOP (RTX 4050) y PUEDE
+ser notebook (es rápido, minutos, no como entrenar). En TT2 se hará en la Jetson, donde conviene
+script en src/ (headless). Mantener la MISMA lógica de medición (warm-up, nº de imágenes,
+batch=1) en ambos para que la comparación laptop<->Jetson sea justa.
+Limpieza menor pendiente: quitar copy_paste=0.3 (código muerto sin máscaras en
+detección) y los pesos sueltos (yolo26n.pt, duplicado de rtdetr-l.pt).

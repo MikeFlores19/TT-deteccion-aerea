@@ -26,11 +26,12 @@ HYPERPARAMS = {
     "momentum" :0.937, #recordar la direccion en que venia el optimizador y no cambiar bruscamente como (carrito con inercia)
     "weight_decay":0.0005, #penaliza pasos muy grandes, fuerza al modelo a aprender representaciones simples y generalizables, no a memorizar el training set
     "warmup_epochs":3, #las primeras 3 épocas el learning rate sube lentamente desde casi cero hasta lr0, evita que el modelo haga actualizaciones caóticas al inicio cuando los pesos son aleatorios
+    "seed": 0, #semilla fija para reproducibilidad (marco de experimentacion justo)
 
     # Augmentación
-    "mosaic": 1.0, # combina 4 imágenes simula alta densidad
-    "mixup": 0.15, # mezcla imágenes  robustez ante variación visual
-    "copy_paste": 0.3, # copia objetos minoritarios entre imágenes
+    "mosaic": 1.0, # combina 4 imágenes, aumenta densidad y variacion de escala
+    "close_mosaic":10, #apaga el mosaico en las ultimas 10 epocas para afinar con imagenes reales (sin distorsion)
+    "mixup": 0.15, # mezcla 2 imágenes y sus etiquetas, robustez ante variación visual 
     "hsv_h": 0.015, # variación de tono  distintas condiciones de luz
     "hsv_s": 0.7, # variación de saturación
     "hsv_v": 0.4, # variación de brillo simula día/noche
@@ -73,12 +74,25 @@ def main():
     de la MEJOR época (la que tuvo mejor mAP50 en validación)
     .get("clave", 0) significa: dame ese valor, y si no existe pon 0
     """
+
+    #Metricas de precision
+    p=float(results.results_dict.get("metrics/precision(B)",0)) #0 por si la clave no existe devuelve 0 para no romper el prorgrama
+    r=float(results.results_dict.get("metrics/recall(B)",0))
+    f1=2*p*r/(p+r) if (p+r)>0 else 0.0 #media amronica de precision y recall
+
+    #Complejidad del modelo
+    #model.info() devuelve (capas, parametros, gradientes, GFLOPs, nos quedamos solo con el tamaño del modelo , y el costo computacional)
+    _,n_params,_,gflops=model.info() 
+
     metrics={
         "run":RUN_NAME,
         "mAP50":float(results.results_dict.get("metrics/mAP50(B)",0)),
         "mAP50_95":float(results.results_dict.get("metrics/mAP50-95(B)",0)),
-        "precision":float(results.results_dict.get("metrics/precision(B)",0)),
-        "recall":float(results.results_dict.get("metrics/recall(B)",0)),
+        "precision":p,
+        "recall": r,
+        "f1":f1,
+        "params_M":n_params/1e6, #millones d eparametors dle mdoelo
+        "gflops":gflops, #operaciones por mil millones d epunto flotante por imagen (costo teorico de computo)
         "hyperparams":HYPERPARAMS, #guarda los hiperparametros usados
     }
 
@@ -88,10 +102,13 @@ def main():
 
     print()
     print(f"Entrenamiento finalizado")
-    print(f"mAP@0.5:{metrics['mAP50']:.4f}")
-    print(f"mAP@0.5:0.95:{metrics['mAP50_95']:.4f}")
-    print(f"Precisión:{metrics['precision']:.4f}")
-    print(f"Recall:{metrics['recall']:.4f}")
+    print(f"mAP@0.5:     {metrics['mAP50']:.4f}")
+    print(f"mAP@0.5:0.95: {metrics['mAP50_95']:.4f}")
+    print(f"Precisión:   {p:.4f}")
+    print(f"Recall:      {r:.4f}")
+    print(f"F1-score:    {f1:.4f}")
+    print(f"Parámetros:  {n_params/1e6:.2f}M")
+    print(f"GFLOPs:      {gflops:.1f}")
     print()
 
 if __name__ == "__main__":

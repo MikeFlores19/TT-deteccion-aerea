@@ -19,3 +19,5 @@ __pycache__/
 # Sistema
 .DS_Store
 Thumbs.db
+docs/*.pdf
+docs/revision_mejoras/

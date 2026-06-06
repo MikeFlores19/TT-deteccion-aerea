@@ -24,16 +24,3 @@ names:
   9: motor
 
 
-#Augmentation
-
-augmentation:
-  mosaic: 1.0 # combina 4 imágenes simula alta densidad
-  mixup: 0.15 # mezcla imágenes  robustez ante variación visual
-  copy_paste: 0.3 # copia objetos minoritarios entre imágenes
-  hsv_h: 0.015 # variación de tono  distintas condiciones de luz
-  hsv_s: 0.7 # variación de saturación
-  hsv_v: 0.4 # variación de brillo simula día/noche
-  fliplr: 0.5 # flip horizontal  más perspectivas
-  flipud: 0.0 # flip vertical  desactivado en perspectiva aérea
-  scale: 0.5 # zoom aleatorio  simula cambios de altitud
-  translate: 0.1 # desplazamiento  simula movimiento de cámara
