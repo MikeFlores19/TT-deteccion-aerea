@@ -18,7 +18,7 @@ HYPERPARAMS={
     # Entrenamiento
     "epochs":100, #100 epocas
     "patience":20, #si despues de 20 epocas no mejora se corta
-    "batch":8, #batch de 4, RT-DETR consume mas VRAM que YOLO por el transformer
+    "batch":4, #batch de 4, RT-DETR consume mas VRAM que YOLO por el transformer
     "imgsz":1280, #misma resolución que YOLOv8n para comparativa justa
     "optimizer":"AdamW",
     "lr0":0.0001, #lr mas bajo que YOLO, los transformers son sensibles a lr altos
