@@ -16,10 +16,10 @@ CONFIG_PATH=PROJECT_ROOT/"configs"/"visdrone.yaml"
 OUTPUT_DIR=PROJECT_ROOT/"results"/"tables"/"eficiencia"
 
 #Modelos a medir: nombre_display -> ruta al best.pt
-#Para agregar RT-DETR cuando este listo, descomentar la linea correspondiente
+
 MODELS={
     "yolov8n_mosaic10": PROJECT_ROOT/"runs"/"yolov8n"/"yolov8n_mosaic10_20260606_0315"/"weights"/"best.pt",
-    #"rtdetr_mosaic10": PROJECT_ROOT/"runs"/"rtdetr"/"rtdetr_visdrone_20260606_1656"/"weights"/"best.pt",
+    "rtdetr_mosaic10": PROJECT_ROOT/"runs"/"rtdetr"/"rtdetr_visdrone_20260606_1656"/"weights"/"best.pt",
 }
 
 #Parametros del profiling
