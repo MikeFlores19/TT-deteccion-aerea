@@ -19,5 +19,7 @@ __pycache__/
 # Sistema
 .DS_Store
 Thumbs.db
-docs/*.pdf
-docs/revision_mejoras/
+
+# Claude Code (local, no va al repo)
+CLAUDE.md
+.claude/
