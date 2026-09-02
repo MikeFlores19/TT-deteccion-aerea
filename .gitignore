@@ -26,3 +26,6 @@ CLAUDE.md
 
 # Dependencias externas clonadas (TrackEval)
 external/
+
+# Videos generados (pesados, se regeneran con visualize.py)
+results/videos/
