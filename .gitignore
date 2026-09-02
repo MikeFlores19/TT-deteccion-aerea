@@ -23,3 +23,6 @@ Thumbs.db
 # Claude Code (local, no va al repo)
 CLAUDE.md
 .claude/
+
+# Dependencias externas clonadas (TrackEval)
+external/
