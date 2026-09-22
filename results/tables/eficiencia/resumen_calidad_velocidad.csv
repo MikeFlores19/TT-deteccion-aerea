@@ -1,0 +1,20 @@
+#Compara CALIDAD (HOTA, del paso 7) contra VELOCIDAD (FPS, medido aqui)
+# en las 4 configuraciones del factorial 2x2.
+#
+# Dos secuencias de densidad opuesta:
+#   uav0000086_00000_v  1344x756   ~215 objetos/frame  -> DENSA
+#   uav0000268_05773_v  3840x2160  ~102 objetos/frame  -> DISPERSA
+#
+# La densa es mas lenta pese a su menor resolucion: el costo depende del
+# numero de objetos, no del tamano de la imagen
+
+
+config,detector,tracker,HOTA_val,secuencia,resolucion,deteccion_ms,tracking_ms,total_ms,fps,vram_mb
+A,yolov8n,bytetrack,41.44,uav0000086_00000_v,1344x756,11.85,6.14,17.99,55.58,93.1
+B,yolov8n,deepsort,33.94,uav0000086_00000_v,1344x756,10.27,101.97,112.24,8.91,1229.7
+C,rtdetr,bytetrack,36.99,uav0000086_00000_v,1344x756,88.86,8.51,97.37,10.27,475.6
+D,rtdetr,deepsort,28.66,uav0000086_00000_v,1344x756,93.29,74.08,167.37,5.97,1478.8
+A,yolov8n,bytetrack,41.44,uav0000268_05773_v,3840x2160,8.06,1.38,9.44,105.96,219.7
+B,yolov8n,deepsort,33.94,uav0000268_05773_v,3840x2160,9.04,8.62,17.66,56.63,307.5
+C,rtdetr,bytetrack,36.99,uav0000268_05773_v,3840x2160,89.96,3.38,93.34,10.71,582.4
+D,rtdetr,deepsort,28.66,uav0000268_05773_v,3840x2160,92.01,13.16,105.17,9.51,541.5
