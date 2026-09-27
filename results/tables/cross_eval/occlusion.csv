@@ -1,0 +1,17 @@
+modelo,atributo,nivel,objetos,recall@0.25,AP50,AP50_car
+yolov8n,todos,todos,80260,0.855,0.6133,0.8204
+yolov8n,oclusion,sin,71890,0.8594,0.6006,0.8172
+yolov8n,oclusion,pequeña (1-30%),6422,0.8673,0.2246,0.4208
+yolov8n,oclusion,media (30-70%),1006,0.7803,0.022,0.0457
+yolov8n,oclusion,grande (70-100%),942,0.5149,0.0119,0.0242
+yolov8n,fuera_de_vista,sin,72886,0.8588,0.6005,0.8165
+yolov8n,fuera_de_vista,pequeña (1-30%),3671,0.8758,0.1891,0.4451
+yolov8n,fuera_de_vista,media (30-50%),3703,0.7594,0.1173,0.2075
+rtdetr,todos,todos,80260,0.8687,0.5782,0.8065
+rtdetr,oclusion,sin,71890,0.8701,0.568,0.8024
+rtdetr,oclusion,pequeña (1-30%),6422,0.8851,0.2182,0.4105
+rtdetr,oclusion,media (30-70%),1006,0.8807,0.0256,0.0515
+rtdetr,oclusion,grande (70-100%),942,0.6369,0.01,0.0253
+rtdetr,fuera_de_vista,sin,72886,0.8736,0.5663,0.802
+rtdetr,fuera_de_vista,pequeña (1-30%),3671,0.8848,0.1905,0.46
+rtdetr,fuera_de_vista,media (30-50%),3703,0.758,0.1278,0.2291

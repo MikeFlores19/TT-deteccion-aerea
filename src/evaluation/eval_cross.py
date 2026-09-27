@@ -21,7 +21,7 @@ Modos (--dataset):
 
 Salidas:
     results/tables/cross_eval/{modelo}__{dataset}.json   métricas globales y por clase
-    data/cross_eval/stats/{modelo}__{dataset}.npz        estadísticas por imagen (paso 7)
+    data/cross_eval/stats/{modelo}__{dataset}.npz        estadísticas por imagen (pasos 7 y 7b)
 
 Uso (desde la raíz del proyecto):
     python -m src.evaluation.eval_cross --model yolov8n --dataset visdrone_val10
@@ -68,6 +68,7 @@ class CrossEvalMixin:
         CrossEvalMixin.instance=self
         self.records=[]
         self._pb=None
+        self._native=None
 
     def init_metrics(self, model):
         super().init_metrics(model)
@@ -79,7 +80,7 @@ class CrossEvalMixin:
         #Registrar las estadísticas de cada imagen (para el desglose del paso 7)
         orig_update=self.metrics.update_stats
         def update_and_record(stat):
-            self.records.append({"file":self._pb["im_file"],
+            self.records.append({"file":self._pb["im_file"], "pred_boxes":self._native,
                                  **{k:np.asarray(v).copy() for k, v in stat.items()}})
             orig_update(stat)
         self.metrics.update_stats=update_and_record
@@ -90,7 +91,12 @@ class CrossEvalMixin:
         return self._pb
 
     def _prepare_pred(self, pred):
-        pred=super()._prepare_pred(pred)
+        pred=self._map_and_filter(super()._prepare_pred(pred))
+        #Cajas en píxeles originales, para el análisis por objeto del paso 7b
+        self._native=self._to_native(pred["bboxes"].clone().float(), self._pb).cpu().numpy().reshape(-1, 4)
+        return pred
+
+    def _map_and_filter(self, pred):
         if self.cls_map is None or pred["cls"].shape[0]==0:
             return pred
 
@@ -189,6 +195,7 @@ def save_stats(records, path):
         files=np.array([Path(f).name for f in files]),
         tp=cat("tp", 10).astype(bool),
         conf=cat("conf").astype(np.float32),
+        pred_boxes=cat("pred_boxes", 4).astype(np.float32),  #xyxy en píxeles originales
         pred_cls=cat("pred_cls").astype(np.int16),
         pred_img=np.repeat(np.arange(len(files)), n_pred).astype(np.int32),
         target_cls=cat("target_cls").astype(np.int16),
