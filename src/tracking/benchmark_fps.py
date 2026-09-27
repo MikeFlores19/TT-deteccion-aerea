@@ -138,7 +138,9 @@ def leer_hota(nombre_config):
     """Recupera el HOTA del paso 7 para la tabla combinada."""
     detector,tracker=CONFIGS[nombre_config]
     nombre=f"{nombre_config}_{detector}_{tracker}"
-    ruta=TRACKEVAL_DIR/"val"/nombre/"pedestrian_summary.txt"
+    # el paso 10 inserto la carpeta de clase en la ruta:
+    # results/tables/tracking/{split}/{clase|class-agnostic}/{config}/
+    ruta=TRACKEVAL_DIR/"val"/"class-agnostic"/nombre/"pedestrian_summary.txt"
     if not ruta.exists():
         return None
     lineas=ruta.read_text().strip().split("\n")

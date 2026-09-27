@@ -7,9 +7,22 @@ MOT      (9 cols):  frame,id,left,top,w,h,conf,cat,visibility
 Estructura de salida por secuencia:
   {seq}/img1/000001.jpg ... 000464.jpg
   {seq}/gt/gt.txt
+  {seq}/gt/ignore.txt      zonas ignoradas en pixeles: frame,x,y,w,h
   {seq}/seqinfo.ini
+
+Las clases 0 (ignored-region) y 11 (others) no son objetos reales, asi
+que salen del gt.txt, pero NO se tiran: se guardan en ignore.txt porque
+el toolkit oficial las necesita para descartar las predicciones que caen
+dentro (ver src/evaluation/zonas_ignoradas.py). Sin ese archivo el
+evaluador no sabe donde estaban y cuenta esas predicciones como falsos
+positivos.
+
+Uso:
+  python -m src.preprocessing.convert_visdrone_mot_to_motchallenge
+  python -m src.preprocessing.convert_visdrone_mot_to_motchallenge --solo-anotaciones
 """
 
+import argparse
 import configparser #para escribir el seqinfo.ini
 import shutil #para copiar archivos
 from pathlib import Path #para manejar rutas de archivos
@@ -25,7 +38,8 @@ OUT_DIR=PROJECT_ROOT/"data"/"visdrone_mot"/"motchallenge"
 # en la literatura de este dataset. No afecta a MOTA/IDF1/HOTA/IDsw
 FRAME_RATE=30
 
-#clases descartadas 0=ignores-region, 11=others (no son objetos reales)
+#clases que no son objetos reales: salen del gt.txt y van a ignore.txt
+#0=ignored-region, 11=others
 CLASES_EXCLUIDAS={0,11}
 
 #nombre de la carpeta cruda -> nombre dle split de salida
@@ -34,13 +48,18 @@ SPLITS={
     "VisDrone2019-MOT-test-dev":"test-dev",
 }
 
-def convertir_anotacion(ruta_origen,ruta_destino):
-    """Traduce un .txt de VisDrone-MOT al formato MOTChallenge."""
+def convertir_anotacion(ruta_origen,ruta_destino,ruta_ignore):
+    """Traduce un .txt de VisDrone-MOT al formato MOTChallenge.
+
+    Escribe dos archivos: gt.txt con los objetos reales e ignore.txt con
+    las zonas ignoradas (clases 0 y 11) en pixeles.
+    """
 
     conservadas=0
     descartadas=0
 
-    with open (ruta_origen) as f_in, open(ruta_destino,"w") as f_out:
+    with open (ruta_origen) as f_in, open(ruta_destino,"w") as f_out, \
+         open(ruta_ignore,"w") as f_ign:
         for linea in f_in:
             linea=linea.strip()
             if not linea:
@@ -50,6 +69,9 @@ def convertir_anotacion(ruta_origen,ruta_destino):
             frame,obj_id,left,top,w,h,score,cat,_trunc,occ=campos[:10]
 
             if int(cat) in CLASES_EXCLUIDAS:
+                #no es un objeto real, pero su geometria si importa:
+                #el evaluador descarta las predicciones que caigan dentro
+                f_ign.write(f"{frame},{left},{top},{w},{h}\n")
                 descartadas+=1
                 continue
 
@@ -84,8 +106,13 @@ def escribir_seqinfo(ruta_destino,nombre,n_frames,ancho,alto):
         cfg.write(f,space_around_delimiters=False) #space_around_delimiters=False evita que ponga espacios alrededor de los =, que es lo que espera TrackEval
 
 
-def convertir_secuencia(dir_frames,ruta_anotacion,dir_salida):
-    """Convierte una secuencia completa: imagenes + anotacion + seqinfo."""
+def convertir_secuencia(dir_frames,ruta_anotacion,dir_salida,copiar_imagenes=True):
+    """Convierte una secuencia completa: imagenes + anotacion + seqinfo.
+
+    Con copiar_imagenes=False solo regenera gt.txt, ignore.txt y
+    seqinfo.ini. Sirve para volver a generar las anotaciones sin repetir
+    la copia de miles de JPG que ya estan en su sitio.
+    """
     nombre=dir_frames.name
     (dir_salida/"img1").mkdir(parents=True,exist_ok=True)
     (dir_salida/"gt").mkdir(parents=True,exist_ok=True)
@@ -96,16 +123,19 @@ def convertir_secuencia(dir_frames,ruta_anotacion,dir_salida):
         raise RuntimeError(f"No se encontraron frames en {dir_frames}")
 
     #Visdrone usa 7 digitos, MOTChallenge usa 6 digitos, asi que se renombra
-    for i,origen in enumerate(frames,start=1):
-        shutil.copy2(origen,dir_salida/"img1"/f"{i:06d}.jpg")
+    if copiar_imagenes:
+        for i,origen in enumerate(frames,start=1):
+            shutil.copy2(origen,dir_salida/"img1"/f"{i:06d}.jpg")
 
     ancho,alto=Image.open(frames[0]).size #se toma el primero porque todas las imagenes de la secuencia tienen el mismo tamaño
-    escribir_seqinfo(dir_salida/"seqinfo.ini",nombre,len(frames),ancho,alto) 
+    escribir_seqinfo(dir_salida/"seqinfo.ini",nombre,len(frames),ancho,alto)
 
-    conservadas,descartadas=convertir_anotacion(ruta_anotacion,dir_salida/"gt"/"gt.txt")
+    conservadas,descartadas=convertir_anotacion(
+        ruta_anotacion,dir_salida/"gt"/"gt.txt",dir_salida/"gt"/"ignore.txt"
+    )
     return len(frames),ancho,alto,conservadas,descartadas
 
-def convertir_split(nombre_crudo,nombre_split):
+def convertir_split(nombre_crudo,nombre_split,copiar_imagenes=True):
     """Procesa todas las secuencias de un split (val o test-dev)."""
     dir_split=RAW_DIR/nombre_crudo
     if not dir_split.exists():
@@ -126,16 +156,25 @@ def convertir_split(nombre_crudo,nombre_split):
             continue
 
         n,anc,alt,cons,desc=convertir_secuencia(
-            dir_frames,ruta_anotacion,dir_destino/dir_frames.name
+            dir_frames,ruta_anotacion,dir_destino/dir_frames.name,
+            copiar_imagenes=copiar_imagenes,
         )
-        print(f"  {dir_frames.name}: {n} frames  {anc}x{alt}  "f"cajas={cons} descartadas={desc}")
+        print(f"  {dir_frames.name}: {n} frames  {anc}x{alt}  "f"cajas={cons} zonas_ignoradas={desc}")
 
 
 def main():
+    ap=argparse.ArgumentParser()
+    ap.add_argument("--solo-anotaciones",action="store_true",
+                    help="regenera gt.txt, ignore.txt y seqinfo.ini sin recopiar los JPG")
+    args=ap.parse_args()
+
     print(f"origen : {RAW_DIR}")
     print(f"destino: {OUT_DIR}")
+    if args.solo_anotaciones:
+        print("modo   : solo anotaciones (no se copian imagenes)")
     for nombre_crudo,nombre_split in SPLITS.items():
-        convertir_split(nombre_crudo,nombre_split)
+        convertir_split(nombre_crudo,nombre_split,
+                        copiar_imagenes=not args.solo_anotaciones)
     print("\nListo.")
 
 

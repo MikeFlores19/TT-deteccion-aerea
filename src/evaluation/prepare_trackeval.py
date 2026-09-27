@@ -8,11 +8,15 @@ generar una copia adaptada en lugar de apuntarle a los datos originales:
      cualquier clase >1 en las predicciones. Se fuerza la clase a 1 en
      ambos lados: la evaluacion resultante es CLASS-AGNOSTIC.
   2) Espera trackers/{nombre}/data/{seq}.txt (subcarpeta 'data').
-  3) Con DO_PREPROC=False sigue filtrando el gt por conf=0, que es lo
-     que necesitamos (descarta las regiones ignoradas de VisDrone).
+  3) MotChallenge2DBox NO soporta zonas ignoradas: cablea
+     gt_crowd_ignore_regions a vacio (mot_challenge_2d_box.py:273), asi
+     que el filtro no se puede activar con una bandera. Se aplica aqui,
+     sobre las predicciones, con el criterio del toolkit oficial de
+     VisDrone (ver zonas_ignoradas.py).
 
-Los archivos originales NO se modifican: conservan la clase real por si
-mas adelante se quiere un desglose por clase.
+Los archivos originales NO se modifican: conservan la clase real y todas
+sus predicciones. El filtro vive solo en esta copia adaptada, asi que
+runs/tracking/ sigue siendo la salida cruda y trazable del tracker.
 
 Uso:
   python -m src.evaluation.prepare_trackeval --split val
@@ -21,6 +25,12 @@ Uso:
 import argparse
 import shutil
 from pathlib import Path
+
+from src.evaluation.zonas_ignoradas import (
+    caja_de_linea,
+    en_zona_ignorada,
+    leer_zonas,
+)
 
 PROJECT_ROOT=Path(__file__).parent.parent.parent
 MOT_DIR=PROJECT_ROOT/"data"/"visdrone_mot"/"motchallenge"
@@ -33,20 +43,33 @@ OUT_DIR=PROJECT_ROOT/"data"/"visdrone_mot"/"trackeval"
 CLASE_UNICA=1
 
 
-def forzar_clase(ruta_origen,ruta_destino,col_clase):
-    """Copia un .txt cambiando la columna de clase a 1."""
+def forzar_clase(ruta_origen,ruta_destino,col_clase,zonas=None):
+    """Copia un .txt cambiando la columna de clase a 1.
+
+    Con zonas!=None descarta ademas las cajas que caen dentro de una zona
+    ignorada. Solo se pasa para las predicciones: el toolkit oficial no
+    filtra el ground truth.
+
+    Devuelve (lineas_escritas,lineas_descartadas).
+    """
     ruta_destino.parent.mkdir(parents=True,exist_ok=True)
     n=0
+    descartadas=0
     with open(ruta_origen) as f_in,open(ruta_destino,"w") as f_out:
         for linea in f_in:
             linea=linea.strip()
             if not linea:
                 continue
             campos=linea.split(",")
+            if zonas is not None:
+                frame=int(campos[0])
+                if en_zona_ignorada(caja_de_linea(campos),zonas.get(frame,())):
+                    descartadas+=1
+                    continue
             campos[col_clase]=str(CLASE_UNICA)
             f_out.write(",".join(campos)+"\n")
             n+=1
-    return n
+    return n,descartadas
 
 
 def preparar_gt(nombre_split):
@@ -61,7 +84,8 @@ def preparar_gt(nombre_split):
         destino_seq=dir_destino/dir_seq.name
         # gt.txt: columna 7 es la clase (0-indexado)
         # frame,id,left,top,w,h,conf,cat,visibility
-        n=forzar_clase(dir_seq/"gt"/"gt.txt",destino_seq/"gt"/"gt.txt",7)
+        # el gt NO se filtra por zonas ignoradas (asi lo hace el toolkit)
+        n,_=forzar_clase(dir_seq/"gt"/"gt.txt",destino_seq/"gt"/"gt.txt",7)
         # seqinfo.ini se copia tal cual: TrackEval lo necesita para
         # conocer seqLength y las dimensiones de la secuencia
         destino_seq.mkdir(parents=True,exist_ok=True)
@@ -86,21 +110,30 @@ def preparar_trackers(nombre_split,secuencias):
             continue
 
         total=0
+        total_desc=0
         for nombre_seq in secuencias:
             origen=dir_split/f"{nombre_seq}.txt"
             if not origen.exists():
                 print(f"  [ERROR] falta {origen}")
                 continue
+            zonas=leer_zonas(
+                MOT_DIR/nombre_split/nombre_seq/"gt"/"ignore.txt"
+            )
             # results.txt: columna 7 es la clase
             # frame,id,left,top,w,h,conf,cls,-1,-1
-            total+=forzar_clase(
+            n,desc=forzar_clase(
                 origen,
                 dir_destino_base/dir_config.name/"data"/f"{nombre_seq}.txt",
                 7,
+                zonas=zonas,
             )
+            total+=n
+            total_desc+=desc
 
         nombres.append(dir_config.name)
-        print(f"  {dir_config.name}: {total} lineas")
+        pct=100*total_desc/max(1,total+total_desc)
+        print(f"  {dir_config.name}: {total} lineas  "
+              f"(descartadas en zona ignorada: {total_desc}, {pct:.2f}%)")
 
     return nombres
 
