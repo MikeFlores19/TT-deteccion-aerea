@@ -9,9 +9,13 @@ Entrada: results.txt (formato MOTChallenge) + la carpeta img1/ de la
 secuencia. Cualquier fuente que produzca ese mismo par sirve sin
 modificar el script.
 
+Salida separada por dataset: results/videos/{visdrone,uavdt}/
+
 Uso:
   python -m src.tracking.visualize --config A --seq uav0000086_00000_v
   python -m src.tracking.visualize --config A --seq uav0000086_00000_v --focus-id 9
+  python -m src.tracking.visualize --dataset uavdt --seq M1306
+  python -m src.tracking.visualize --dataset uavdt --seq M1306 --focus-longest
 """
 
 import argparse
@@ -21,9 +25,16 @@ from pathlib import Path
 import cv2
 
 PROJECT_ROOT=Path(__file__).parent.parent.parent
-MOT_DIR=PROJECT_ROOT/"data"/"visdrone_mot"/"motchallenge"
-TRACKING_DIR=PROJECT_ROOT/"runs"/"tracking"
 OUT_DIR=PROJECT_ROOT/"results"/"videos"
+
+#dataset -> (frames MOTChallenge, resultados del tracking, split por defecto)
+#uavdt (Fase 4) solo tiene el split "all": las 50 secuencias
+DATASETS={
+    "visdrone":(PROJECT_ROOT/"data"/"visdrone_mot"/"motchallenge",
+                PROJECT_ROOT/"runs"/"tracking","val"),
+    "uavdt":(PROJECT_ROOT/"data"/"uavdt_mot"/"motchallenge",
+             PROJECT_ROOT/"runs"/"tracking_uavdt","all"),
+}
 
 CONFIGS={
     "A":"A_yolov8n_bytetrack",
@@ -95,13 +106,26 @@ def dibujar_estela(img,puntos,color):
         cv2.circle(img,pts[-1],4,color,-1)
 
 
-def generar(nombre_config,nombre_seq,focus_id,fps,max_frames):
-    dir_config=TRACKING_DIR/CONFIGS[nombre_config]
-    ruta_tracks=dir_config/"val"/f"{nombre_seq}.txt"
+def id_mas_largo(por_frame):
+    """ID presente en mas frames: criterio objetivo para el modo foco."""
+    cuenta=defaultdict(int)
+    for tracks in por_frame.values():
+        for t in tracks:
+            cuenta[t[0]]+=1
+    tid=max(cuenta,key=cuenta.get)
+    return tid,cuenta[tid]
+
+
+def generar(nombre_config,nombre_seq,focus_id,fps,max_frames,
+            dataset="visdrone",split=None,focus_longest=False):
+    mot_dir,tracking_dir,split_def=DATASETS[dataset]
+    split=split or split_def
+    dir_config=tracking_dir/CONFIGS[nombre_config]
+    ruta_tracks=dir_config/split/f"{nombre_seq}.txt"
     if not ruta_tracks.exists():
         raise FileNotFoundError(ruta_tracks)
 
-    dir_img=MOT_DIR/"val"/nombre_seq/"img1"
+    dir_img=mot_dir/split/nombre_seq/"img1"
     frames=sorted(dir_img.glob("*.jpg"))
     if max_frames:
         frames=frames[:max_frames]
@@ -109,11 +133,14 @@ def generar(nombre_config,nombre_seq,focus_id,fps,max_frames):
         raise RuntimeError(f"sin frames en {dir_img}")
 
     por_frame=leer_tracks(ruta_tracks)
+    if focus_longest:
+        focus_id,n=id_mas_largo(por_frame)
+        print(f"ID con el recorrido mas largo: #{focus_id} ({n} frames)")
 
     alto,ancho=cv2.imread(str(frames[0])).shape[:2]
 
     sufijo=f"_foco{focus_id}" if focus_id is not None else "_normal"
-    ruta_salida=OUT_DIR/f"{nombre_config}_{nombre_seq}{sufijo}.mp4"
+    ruta_salida=OUT_DIR/dataset/f"{nombre_config}_{nombre_seq}{sufijo}.mp4"
     ruta_salida.parent.mkdir(parents=True,exist_ok=True)
 
     fourcc=cv2.VideoWriter_fourcc(*"mp4v")
@@ -124,6 +151,7 @@ def generar(nombre_config,nombre_seq,focus_id,fps,max_frames):
     estela=deque(maxlen=ESTELA_FRAMES)
     n_objetivo=0
 
+    print(f"dataset  : {dataset} ({split})")
     print(f"config   : {nombre_config}")
     print(f"secuencia: {nombre_seq}  {ancho}x{alto}")
     print(f"modo     : {'foco ID '+str(focus_id) if focus_id is not None else 'normal'}")
@@ -177,14 +205,19 @@ def generar(nombre_config,nombre_seq,focus_id,fps,max_frames):
 
 def main():
     ap=argparse.ArgumentParser()
+    ap.add_argument("--dataset",default="visdrone",choices=list(DATASETS))
+    ap.add_argument("--split",default=None,help="por defecto: val (visdrone) o all (uavdt)")
     ap.add_argument("--config",default="A",choices=list(CONFIGS))
     ap.add_argument("--seq",required=True)
     ap.add_argument("--focus-id",type=int,default=None)
+    ap.add_argument("--focus-longest",action="store_true",
+                    help="modo foco sobre el ID con el recorrido mas largo")
     ap.add_argument("--fps",type=int,default=30)
     ap.add_argument("--max-frames",type=int,default=None)
     args=ap.parse_args()
 
-    generar(args.config,args.seq,args.focus_id,args.fps,args.max_frames)
+    generar(args.config,args.seq,args.focus_id,args.fps,args.max_frames,
+            args.dataset,args.split,args.focus_longest)
 
 
 if __name__=="__main__":
