@@ -15,8 +15,13 @@ Igual que aquel, descarta las predicciones que caen dentro de una zona
 ignorada antes de evaluar (criterio del toolkit oficial, ver
 zonas_ignoradas.py). El ground truth no se filtra.
 
+UAVDT (Fase 4, --dataset uavdt): tres categorias (car, truck, bus). UAVDT
+no distingue vans, asi que las predicciones van (5) cuentan como car (4),
+igual que en la evaluacion de deteccion cruzada.
+
 Uso:
   python -m src.evaluation.prepare_trackeval_clases --split test-dev
+  python -m src.evaluation.prepare_trackeval_clases --dataset uavdt --split all
 """
 
 import argparse
@@ -33,6 +38,16 @@ PROJECT_ROOT=Path(__file__).parent.parent.parent
 MOT_DIR=PROJECT_ROOT/"data"/"visdrone_mot"/"motchallenge"
 TRACKING_DIR=PROJECT_ROOT/"runs"/"tracking"
 OUT_DIR=PROJECT_ROOT/"data"/"visdrone_mot"/"trackeval_clases"
+
+#UAVDT (Fase 4): mismas carpetas pero bajo data/uavdt_mot y runs/tracking_uavdt
+UAVDT={
+    "mot":PROJECT_ROOT/"data"/"uavdt_mot"/"motchallenge",
+    "tracking":PROJECT_ROOT/"runs"/"tracking_uavdt",
+    "out":PROJECT_ROOT/"data"/"uavdt_mot"/"trackeval_clases",
+}
+CLASES_UAVDT={4:"car", 6:"truck", 9:"bus"}
+#ids extra que cuentan como la clase en las PREDICCIONES: van (5) -> car (4)
+ALIAS_UAVDT={4:{5}}
 
 # las 5 categorias del toolkit oficial, en indexacion VisDrone-MOT
 CLASES={
@@ -53,11 +68,12 @@ COL_CLASE=7
 CLASE_UNICA=1
 
 
-def filtrar_y_forzar(ruta_origen,ruta_destino,id_clase,zonas=None):
+def filtrar_y_forzar(ruta_origen,ruta_destino,id_clase,zonas=None,alias=()):
     """Copia solo las lineas de una clase, reetiquetandola a 1.
 
     Con zonas!=None descarta ademas las cajas que caen dentro de una zona
     ignorada. Solo se pasa para las predicciones.
+    alias: ids adicionales que tambien cuentan como id_clase (solo predicciones).
 
     Devuelve (lineas_escritas,lineas_descartadas_por_zona).
     """
@@ -70,7 +86,7 @@ def filtrar_y_forzar(ruta_origen,ruta_destino,id_clase,zonas=None):
             if not linea:
                 continue
             campos=linea.split(",")
-            if int(campos[COL_CLASE])!=id_clase:
+            if int(campos[COL_CLASE])!=id_clase and int(campos[COL_CLASE]) not in alias:
                 continue
             if zonas is not None:
                 frame=int(campos[0])
@@ -83,7 +99,7 @@ def filtrar_y_forzar(ruta_origen,ruta_destino,id_clase,zonas=None):
     return n,descartadas
 
 
-def preparar_clase(nombre_split,id_clase,nombre_clase,configs):
+def preparar_clase(nombre_split,id_clase,nombre_clase,configs,alias=()):
     """Genera gt y trackers para una sola clase."""
     dir_origen=MOT_DIR/nombre_split
     secuencias=sorted(p for p in dir_origen.iterdir() if p.is_dir())
@@ -120,6 +136,7 @@ def preparar_clase(nombre_split,id_clase,nombre_clase,configs):
                 nombre_config/"data"/f"{dir_seq.name}.txt",
                 id_clase,
                 zonas=zonas_por_seq[dir_seq.name],
+                alias=alias,
             )
             total_trk+=n
             total_desc+=desc
@@ -130,10 +147,19 @@ def preparar_clase(nombre_split,id_clase,nombre_clase,configs):
 
 def main():
     ap=argparse.ArgumentParser()
-    ap.add_argument("--split",default="test-dev",choices=["val","test-dev"])
+    ap.add_argument("--dataset",default="visdrone",choices=["visdrone","uavdt"])
+    ap.add_argument("--split",default="test-dev",choices=["val","test-dev","all"])
     ap.add_argument("--configs",nargs="+",default=None,
                     help="nombres de carpeta en runs/tracking; por defecto todas")
     args=ap.parse_args()
+
+    global MOT_DIR,TRACKING_DIR,OUT_DIR
+    clases,alias_por_clase=CLASES,{}
+    if args.dataset=="uavdt":
+        MOT_DIR,TRACKING_DIR,OUT_DIR=UAVDT["mot"],UAVDT["tracking"],UAVDT["out"]
+        clases,alias_por_clase=CLASES_UAVDT,ALIAS_UAVDT
+        if args.split!="all":
+            ap.error("uavdt solo admite --split all")
 
     if args.configs:
         configs=args.configs
@@ -141,13 +167,15 @@ def main():
         configs=[p.name for p in sorted(TRACKING_DIR.iterdir())
                  if (p/args.split).exists()]
 
+    print(f"dataset: {args.dataset}")
     print(f"split  : {args.split}")
     print(f"configs: {' '.join(configs)}")
     print(f"destino: {OUT_DIR}\n")
 
-    for id_clase,nombre_clase in CLASES.items():
+    for id_clase,nombre_clase in clases.items():
         total_gt,resumen=preparar_clase(
-            args.split,id_clase,nombre_clase,configs
+            args.split,id_clase,nombre_clase,configs,
+            alias=alias_por_clase.get(id_clase,()),
         )
         detalle="  ".join(f"{c}={n}(-{d})" for c,n,d in resumen)
         print(f"{nombre_clase:12} (cat {id_clase:2}): gt={total_gt:7}  {detalle}")

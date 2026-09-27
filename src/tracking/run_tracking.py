@@ -13,6 +13,7 @@ Uso:
   python -m src.tracking.run_tracking --config B --split val
   python -m src.tracking.run_tracking --config C --split val
   python -m src.tracking.run_tracking --config D --split val
+  python -m src.tracking.run_tracking --config A --dataset uavdt --split all
 """
 
 import argparse
@@ -25,9 +26,14 @@ import numpy as np
 from src.tracking.trackers import ByteTrackAdapter, DeepSortAdapter
 
 PROJECT_ROOT=Path(__file__).parent.parent.parent
-MOT_DIR=PROJECT_ROOT/"data"/"visdrone_mot"/"motchallenge"
-DETS_DIR=PROJECT_ROOT/"data"/"visdrone_mot"/"detections"
-OUT_DIR=PROJECT_ROOT/"runs"/"tracking"
+
+#dataset -> (carpeta base de datos, carpeta de resultados)
+#uavdt (Fase 4) solo tiene el split "all": las 50 secuencias
+DATASETS={
+    "visdrone":(PROJECT_ROOT/"data"/"visdrone_mot", PROJECT_ROOT/"runs"/"tracking"),
+    "uavdt":(PROJECT_ROOT/"data"/"uavdt_mot", PROJECT_ROOT/"runs"/"tracking_uavdt"),
+}
+SPLITS={"visdrone":["val","test-dev"], "uavdt":["all"]}
 
 # el factorial 2x2: (detector, tracker)
 CONFIGS={
@@ -97,19 +103,23 @@ def rastrear_secuencia(dets_npz,dir_seq,nombre_tracker,ruta_salida):
     return len(claves),len(lineas),len(ids_vistos),segundos
 
 
-def ejecutar(nombre_config,nombre_split):
+def ejecutar(nombre_config,nombre_split,dataset="visdrone"):
     detector,tracker=CONFIGS[nombre_config]
+    base,OUT_DIR=DATASETS[dataset]
+    MOT_DIR=base/"motchallenge"
+    DETS_DIR=base/"detections"
 
     dir_dets=DETS_DIR/detector/nombre_split
     if not dir_dets.exists():
         raise FileNotFoundError(
             f"faltan detecciones en {dir_dets}. "
-            f"Corre antes dump_detections.py --detector {detector}"
+            f"Corre antes dump_detections.py --detector {detector} --dataset {dataset}"
         )
 
     dir_split=MOT_DIR/nombre_split
     dir_destino=OUT_DIR/f"{nombre_config}_{detector}_{tracker}"/nombre_split
 
+    print(f"dataset : {dataset}")
     print(f"config  : {nombre_config}  ({detector} + {tracker})")
     print(f"split   : {nombre_split}")
     print(f"salida  : {dir_destino}")
@@ -140,10 +150,13 @@ def ejecutar(nombre_config,nombre_split):
 def main():
     ap=argparse.ArgumentParser()
     ap.add_argument("--config",required=True,choices=list(CONFIGS))
-    ap.add_argument("--split",required=True,choices=["val","test-dev"])
+    ap.add_argument("--dataset",default="visdrone",choices=list(DATASETS))
+    ap.add_argument("--split",required=True,choices=["val","test-dev","all"])
     args=ap.parse_args()
+    if args.split not in SPLITS[args.dataset]:
+        ap.error(f"{args.dataset} solo admite --split {'/'.join(SPLITS[args.dataset])}")
 
-    ejecutar(args.config,args.split)
+    ejecutar(args.config,args.split,args.dataset)
 
 
 if __name__=="__main__":

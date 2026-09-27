@@ -13,6 +13,7 @@ Motivo doble:
 Uso:
   python -m src.tracking.dump_detections --detector yolov8n --split val
   python -m src.tracking.dump_detections --detector rtdetr  --split val
+  python -m src.tracking.dump_detections --detector yolov8n --dataset uavdt --split all
 """
 
 import argparse
@@ -25,8 +26,14 @@ import numpy as np
 from src.tracking.detectors import RTDETRDetector, YOLOv8nDetector
 
 PROJECT_ROOT=Path(__file__).parent.parent.parent
-MOT_DIR=PROJECT_ROOT/"data"/"visdrone_mot"/"motchallenge"
-OUT_DIR=PROJECT_ROOT/"data"/"visdrone_mot"/"detections"
+
+#dataset -> carpeta base (motchallenge/ y detections/ cuelgan de ella)
+#uavdt (Fase 4) solo tiene el split "all": las 50 secuencias
+DATASETS={
+    "visdrone":PROJECT_ROOT/"data"/"visdrone_mot",
+    "uavdt":PROJECT_ROOT/"data"/"uavdt_mot",
+}
+SPLITS={"visdrone":["val","test-dev"], "uavdt":["all"]}
 
 # nombre -> (clase adaptadora, ruta de pesos)
 DETECTORES={
@@ -71,7 +78,9 @@ def volcar_secuencia(detector,dir_seq,ruta_salida):
     return len(frames),total_cajas,segundos
 
 
-def volcar_split(nombre_detector,nombre_split,dispositivo):
+def volcar_split(nombre_detector,nombre_split,dispositivo,dataset="visdrone"):
+    MOT_DIR=DATASETS[dataset]/"motchallenge"
+    OUT_DIR=DATASETS[dataset]/"detections"
     clase,ruta_pesos=DETECTORES[nombre_detector]
     ruta_pesos=PROJECT_ROOT/ruta_pesos
     if not ruta_pesos.exists():
@@ -81,6 +90,7 @@ def volcar_split(nombre_detector,nombre_split,dispositivo):
     if not dir_split.exists():
         raise FileNotFoundError(f"no existe {dir_split}")
 
+    print(f"dataset : {dataset}")
     print(f"detector: {nombre_detector}")
     print(f"pesos   : {ruta_pesos}")
     print(f"split   : {nombre_split}")
@@ -114,11 +124,14 @@ def volcar_split(nombre_detector,nombre_split,dispositivo):
 def main():
     ap=argparse.ArgumentParser()
     ap.add_argument("--detector",required=True,choices=list(DETECTORES))
-    ap.add_argument("--split",required=True,choices=["val","test-dev"])
+    ap.add_argument("--dataset",default="visdrone",choices=list(DATASETS))
+    ap.add_argument("--split",required=True,choices=["val","test-dev","all"])
     ap.add_argument("--device",default="cuda:0")
     args=ap.parse_args()
+    if args.split not in SPLITS[args.dataset]:
+        ap.error(f"{args.dataset} solo admite --split {'/'.join(SPLITS[args.dataset])}")
 
-    volcar_split(args.detector,args.split,args.device)
+    volcar_split(args.detector,args.split,args.device,args.dataset)
 
 
 if __name__=="__main__":

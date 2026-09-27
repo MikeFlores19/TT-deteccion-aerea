@@ -21,10 +21,14 @@ Configuracion elegida y por que:
                         en ambos protocolos las clases se reetiquetan
                         a 1 antes de evaluar
 
+  UAVDT (Fase 4, --dataset uavdt): car, truck y bus, split "all".
+                  Requiere prepare_trackeval_clases.py --dataset uavdt
+
 Uso:
   python -m src.evaluation.eval_tracking --split val
   python -m src.evaluation.eval_tracking --split test-dev --clase car
   python -m src.evaluation.eval_tracking --split test-dev --clase todas
+  python -m src.evaluation.eval_tracking --dataset uavdt --split all --clase todas
 """
 
 import argparse
@@ -39,6 +43,11 @@ OUT_DIR=PROJECT_ROOT/"results"/"tables"/"tracking"
 
 # las 5 categorias del toolkit oficial de VisDrone
 CLASES=["pedestrian","car","van","truck","bus"]
+
+#UAVDT (Fase 4): sus 3 categorias, con carpetas propias
+CLASES_UAVDT=["car","truck","bus"]
+UAVDT_CLASES_DIR=PROJECT_ROOT/"data"/"uavdt_mot"/"trackeval_clases"
+UAVDT_OUT_DIR=PROJECT_ROOT/"results"/"tables"/"tracking_uavdt"
 
 # TrackEval no es un paquete instalable: se importa por ruta
 sys.path.insert(0,str(TRACKEVAL_DIR))
@@ -110,15 +119,23 @@ def evaluar(nombre_split,n_cores,nombre_clase=None):
 
 def main():
     ap=argparse.ArgumentParser()
-    ap.add_argument("--split",default="val",choices=["val","test-dev"])
+    ap.add_argument("--dataset",default="visdrone",choices=["visdrone","uavdt"])
+    ap.add_argument("--split",default="val",choices=["val","test-dev","all"])
     ap.add_argument("--cores",type=int,default=1)
     ap.add_argument("--clase",default=None,
                     help="una de las 5 oficiales, o 'todas'; "
                          "omitir para class-agnostic")
     args=ap.parse_args()
 
+    global CLASES_DIR,OUT_DIR
+    clases=CLASES
+    if args.dataset=="uavdt":
+        CLASES_DIR,OUT_DIR,clases=UAVDT_CLASES_DIR,UAVDT_OUT_DIR,CLASES_UAVDT
+        if args.split!="all" or not args.clase:
+            ap.error("uavdt solo admite --split all con --clase (car/truck/bus/todas)")
+
     if args.clase=="todas":
-        for c in CLASES:
+        for c in clases:
             print(f"\n{'='*60}\n{c.upper()}\n{'='*60}")
             evaluar(args.split,args.cores,c)
     else:
