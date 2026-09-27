@@ -1,0 +1,52 @@
+{
+  "model": "rtdetr",
+  "weights": "runs/rtdetr/rtdetr_visdrone_20260606_1656/weights/best.pt",
+  "dataset": "uavdt",
+  "images": 4093,
+  "instances": 80260,
+  "mAP50": 0.5782,
+  "mAP50-95": 0.339,
+  "P": 0.6222,
+  "R": 0.7128,
+  "F1": 0.6644,
+  "per_class": {
+    "car": {
+      "P": 0.8025,
+      "R": 0.8268,
+      "mAP50": 0.8065,
+      "mAP50-95": 0.4109,
+      "instances": 75922
+    },
+    "truck": {
+      "P": 0.4587,
+      "R": 0.6268,
+      "mAP50": 0.4424,
+      "mAP50-95": 0.2605,
+      "instances": 2524
+    },
+    "bus": {
+      "P": 0.6054,
+      "R": 0.6847,
+      "mAP50": 0.4857,
+      "mAP50-95": 0.3455,
+      "instances": 1814
+    }
+  },
+  "params": {
+    "imgsz": 1280,
+    "conf": 0.001,
+    "iou": 0.7,
+    "max_det": 300,
+    "half": false,
+    "batch": 4,
+    "class_map": {
+      "3": 0,
+      "4": 0,
+      "5": 1,
+      "8": 2
+    },
+    "ignore_zones": true,
+    "ignore_frac": 0.5
+  },
+  "seconds": 401.8
+}

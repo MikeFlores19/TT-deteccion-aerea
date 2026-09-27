@@ -1,0 +1,96 @@
+{
+  "model": "rtdetr",
+  "weights": "runs/rtdetr/rtdetr_visdrone_20260606_1656/weights/best.pt",
+  "dataset": "visdrone_val10",
+  "images": 548,
+  "instances": 38759,
+  "mAP50": 0.5124,
+  "mAP50-95": 0.3192,
+  "P": 0.6449,
+  "R": 0.5333,
+  "F1": 0.5838,
+  "per_class": {
+    "pedestrian": {
+      "P": 0.6931,
+      "R": 0.611,
+      "mAP50": 0.6324,
+      "mAP50-95": 0.3281,
+      "instances": 8844
+    },
+    "people": {
+      "P": 0.6383,
+      "R": 0.4956,
+      "mAP50": 0.5133,
+      "mAP50-95": 0.2287,
+      "instances": 5125
+    },
+    "bicycle": {
+      "P": 0.5525,
+      "R": 0.3326,
+      "mAP50": 0.3314,
+      "mAP50-95": 0.1635,
+      "instances": 1287
+    },
+    "car": {
+      "P": 0.8175,
+      "R": 0.8564,
+      "mAP50": 0.8621,
+      "mAP50-95": 0.6315,
+      "instances": 14064
+    },
+    "van": {
+      "P": 0.6865,
+      "R": 0.5403,
+      "mAP50": 0.4816,
+      "mAP50-95": 0.3648,
+      "instances": 1975
+    },
+    "truck": {
+      "P": 0.6235,
+      "R": 0.5013,
+      "mAP50": 0.4623,
+      "mAP50-95": 0.323,
+      "instances": 750
+    },
+    "tricycle": {
+      "P": 0.5266,
+      "R": 0.4957,
+      "mAP50": 0.4065,
+      "mAP50-95": 0.2446,
+      "instances": 1045
+    },
+    "awning-tricycle": {
+      "P": 0.4159,
+      "R": 0.2425,
+      "mAP50": 0.1525,
+      "mAP50-95": 0.1007,
+      "instances": 532
+    },
+    "bus": {
+      "P": 0.8067,
+      "R": 0.6152,
+      "mAP50": 0.649,
+      "mAP50-95": 0.4906,
+      "instances": 251
+    },
+    "motor": {
+      "P": 0.6881,
+      "R": 0.642,
+      "mAP50": 0.6327,
+      "mAP50-95": 0.3166,
+      "instances": 4886
+    }
+  },
+  "params": {
+    "imgsz": 1280,
+    "conf": 0.001,
+    "iou": 0.7,
+    "max_det": 300,
+    "half": false,
+    "batch": 4,
+    "class_map": null,
+    "ignore_zones": false,
+    "ignore_frac": 0.5
+  },
+  "seconds": 74.3
+}

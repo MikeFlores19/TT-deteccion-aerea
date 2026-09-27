@@ -1,0 +1,52 @@
+{
+  "model": "yolov8n",
+  "weights": "runs/yolov8n/yolov8n_mosaic10_20260606_0315/weights/best.pt",
+  "dataset": "uavdt",
+  "images": 4093,
+  "instances": 80260,
+  "mAP50": 0.6133,
+  "mAP50-95": 0.3504,
+  "P": 0.6319,
+  "R": 0.6844,
+  "F1": 0.6571,
+  "per_class": {
+    "car": {
+      "P": 0.8129,
+      "R": 0.8164,
+      "mAP50": 0.8203,
+      "mAP50-95": 0.4132,
+      "instances": 75922
+    },
+    "truck": {
+      "P": 0.4818,
+      "R": 0.561,
+      "mAP50": 0.4752,
+      "mAP50-95": 0.2681,
+      "instances": 2524
+    },
+    "bus": {
+      "P": 0.601,
+      "R": 0.6759,
+      "mAP50": 0.5444,
+      "mAP50-95": 0.3698,
+      "instances": 1814
+    }
+  },
+  "params": {
+    "imgsz": 1280,
+    "conf": 0.001,
+    "iou": 0.7,
+    "max_det": 300,
+    "half": false,
+    "batch": 8,
+    "class_map": {
+      "3": 0,
+      "4": 0,
+      "5": 1,
+      "8": 2
+    },
+    "ignore_zones": true,
+    "ignore_frac": 0.5
+  },
+  "seconds": 54.7
+}
