@@ -14,6 +14,11 @@ Uso:
   python -m src.tracking.run_tracking --config C --split val
   python -m src.tracking.run_tracking --config D --split val
   python -m src.tracking.run_tracking --config A --dataset uavdt --split all
+
+Fase 5 (Jetson) · opciones añadidas, sin cambiar el comportamiento anterior:
+  --dets    carpeta de detecciones a leer (por defecto, la del detector de la config)
+  --suffix  sufijo de la carpeta de salida (no pisa los resultados existentes)
+  python -m src.tracking.run_tracking --config A --split test-dev --dets yolov8n_trt16 --suffix _jetson_trt16
 """
 
 import argparse
@@ -103,24 +108,28 @@ def rastrear_secuencia(dets_npz,dir_seq,nombre_tracker,ruta_salida):
     return len(claves),len(lineas),len(ids_vistos),segundos
 
 
-def ejecutar(nombre_config,nombre_split,dataset="visdrone"):
+def ejecutar(nombre_config,nombre_split,dataset="visdrone",dets=None,sufijo=""):
     detector,tracker=CONFIGS[nombre_config]
     base,OUT_DIR=DATASETS[dataset]
     MOT_DIR=base/"motchallenge"
     DETS_DIR=base/"detections"
 
-    dir_dets=DETS_DIR/detector/nombre_split
+    #Fase 5: por defecto se leen las detecciones del detector de la config (comportamiento anterior)
+    dets=dets or detector
+    dir_dets=DETS_DIR/dets/nombre_split
     if not dir_dets.exists():
         raise FileNotFoundError(
             f"faltan detecciones en {dir_dets}. "
             f"Corre antes dump_detections.py --detector {detector} --dataset {dataset}"
+            + (f" --tag {dets}" if dets!=detector else "")
         )
 
     dir_split=MOT_DIR/nombre_split
-    dir_destino=OUT_DIR/f"{nombre_config}_{detector}_{tracker}"/nombre_split
+    dir_destino=OUT_DIR/f"{nombre_config}_{detector}_{tracker}{sufijo}"/nombre_split
 
     print(f"dataset : {dataset}")
     print(f"config  : {nombre_config}  ({detector} + {tracker})")
+    print(f"dets    : {dir_dets}")
     print(f"split   : {nombre_split}")
     print(f"salida  : {dir_destino}")
 
@@ -152,11 +161,14 @@ def main():
     ap.add_argument("--config",required=True,choices=list(CONFIGS))
     ap.add_argument("--dataset",default="visdrone",choices=list(DATASETS))
     ap.add_argument("--split",required=True,choices=["val","test-dev","all"])
+    #Fase 5: detecciones alternativas (p. ej. del .engine) y sufijo de salida
+    ap.add_argument("--dets",default=None,help="Carpeta en detections/ (por defecto, la del detector de la config)")
+    ap.add_argument("--suffix",default="",help="Sufijo de la carpeta de salida, p. ej. _jetson_trt16")
     args=ap.parse_args()
     if args.split not in SPLITS[args.dataset]:
         ap.error(f"{args.dataset} solo admite --split {'/'.join(SPLITS[args.dataset])}")
 
-    ejecutar(args.config,args.split,args.dataset)
+    ejecutar(args.config,args.split,args.dataset,dets=args.dets,sufijo=args.suffix)
 
 
 if __name__=="__main__":

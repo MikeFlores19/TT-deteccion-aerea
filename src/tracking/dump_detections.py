@@ -14,6 +14,12 @@ Uso:
   python -m src.tracking.dump_detections --detector yolov8n --split val
   python -m src.tracking.dump_detections --detector rtdetr  --split val
   python -m src.tracking.dump_detections --detector yolov8n --dataset uavdt --split all
+
+Fase 5 (Jetson) · opciones añadidas, sin cambiar el comportamiento anterior:
+  --weights  otros pesos (p. ej. el best.engine de TensorRT FP16)
+  --tag      nombre de la carpeta de salida en detections/ (por defecto, el del detector)
+  python -m src.tracking.dump_detections --detector yolov8n --split test-dev \\
+      --weights runs/yolov8n/yolov8n_mosaic10_20260606_0315/weights/best.engine --tag yolov8n_trt16
 """
 
 import argparse
@@ -78,13 +84,21 @@ def volcar_secuencia(detector,dir_seq,ruta_salida):
     return len(frames),total_cajas,segundos
 
 
-def volcar_split(nombre_detector,nombre_split,dispositivo,dataset="visdrone"):
+def volcar_split(nombre_detector,nombre_split,dispositivo,dataset="visdrone",
+                 pesos=None,tag=None):
     MOT_DIR=DATASETS[dataset]/"motchallenge"
     OUT_DIR=DATASETS[dataset]/"detections"
     clase,ruta_pesos=DETECTORES[nombre_detector]
-    ruta_pesos=PROJECT_ROOT/ruta_pesos
+    #Fase 5: pesos alternativos (.engine); rutas relativas a la raiz del proyecto
+    if pesos:
+        ruta_pesos=pesos
+    ruta_pesos=Path(ruta_pesos)
+    if not ruta_pesos.is_absolute():
+        ruta_pesos=PROJECT_ROOT/ruta_pesos
     if not ruta_pesos.exists():
         raise FileNotFoundError(f"no existe {ruta_pesos}")
+    #carpeta de salida: por defecto el nombre del detector (comportamiento anterior)
+    tag=tag or nombre_detector
 
     dir_split=MOT_DIR/nombre_split
     if not dir_split.exists():
@@ -94,10 +108,11 @@ def volcar_split(nombre_detector,nombre_split,dispositivo,dataset="visdrone"):
     print(f"detector: {nombre_detector}")
     print(f"pesos   : {ruta_pesos}")
     print(f"split   : {nombre_split}")
+    print(f"tag     : {tag}")
 
     detector=clase(ruta_pesos,dispositivo=dispositivo)
 
-    dir_destino=OUT_DIR/nombre_detector/nombre_split
+    dir_destino=OUT_DIR/tag/nombre_split
     secuencias=sorted(p for p in dir_split.iterdir() if p.is_dir())
     print(f"\n=== {len(secuencias)} secuencias ===")
 
@@ -127,11 +142,15 @@ def main():
     ap.add_argument("--dataset",default="visdrone",choices=list(DATASETS))
     ap.add_argument("--split",required=True,choices=["val","test-dev","all"])
     ap.add_argument("--device",default="cuda:0")
+    #Fase 5: pesos alternativos y carpeta de salida propia
+    ap.add_argument("--weights",default=None,help="Pesos a usar (por defecto, el best.pt del detector)")
+    ap.add_argument("--tag",default=None,help="Carpeta de salida en detections/ (por defecto, el nombre del detector)")
     args=ap.parse_args()
     if args.split not in SPLITS[args.dataset]:
         ap.error(f"{args.dataset} solo admite --split {'/'.join(SPLITS[args.dataset])}")
 
-    volcar_split(args.detector,args.split,args.device,args.dataset)
+    volcar_split(args.detector,args.split,args.device,args.dataset,
+                 pesos=args.weights,tag=args.tag)
 
 
 if __name__=="__main__":
