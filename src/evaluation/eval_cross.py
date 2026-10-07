@@ -26,6 +26,16 @@ Salidas:
 Uso (desde la raíz del proyecto):
     python -m src.evaluation.eval_cross --model yolov8n --dataset visdrone_val10
     python -m src.evaluation.eval_cross --model rtdetr  --dataset uavdt
+
+Fase 5 (Jetson) · opciones añadidas, sin cambiar el comportamiento anterior:
+    --weights   otro archivo de pesos (p. ej. best.engine de TensorRT)
+    --suffix    sufijo para el tag de salida (no sobrescribe los JSON/NPZ existentes)
+    --no-rect   fuerza rect=False. Ultralytics fuerza rect=False y batch=1 con un .engine
+                estático, así que el .pt de control debe correr con --no-rect --batch 1
+    python -m src.evaluation.eval_cross --model yolov8n --dataset visdrone_val10 --suffix __jetson_pt
+    python -m src.evaluation.eval_cross --model yolov8n --dataset visdrone_val10 --no-rect --batch 1 --suffix __jetson_pt_norect
+    python -m src.evaluation.eval_cross --model yolov8n --dataset visdrone_val10 \\
+        --weights runs/yolov8n/yolov8n_mosaic10_20260606_0315/weights/best.engine --suffix __jetson_trt16
 """
 import argparse
 import json
@@ -203,13 +213,33 @@ def save_stats(records, path):
     )
 
 
+def rel(p):
+    """Ruta relativa al proyecto si está dentro de él; si no, absoluta."""
+    try:
+        return str(Path(p).resolve().relative_to(PROJECT_ROOT))
+    except ValueError:
+        return str(Path(p).resolve())
+
+
 def main():
     ap=argparse.ArgumentParser()
     ap.add_argument("--model", required=True, choices=list(WEIGHTS))
     ap.add_argument("--dataset", required=True, choices=["visdrone_val10", "visdrone_val", "uavdt"])
     ap.add_argument("--batch", type=int, default=None)
     ap.add_argument("--device", default="0")
+    #Fase 5: pesos alternativos (.engine), sufijo del tag y rect=False para el control
+    ap.add_argument("--weights", default=None, help="Pesos a evaluar (por defecto, el best.pt del modelo)")
+    ap.add_argument("--suffix", default="", help="Sufijo del tag de salida, p. ej. __jetson_trt16")
+    ap.add_argument("--no-rect", action="store_true", help="Fuerza rect=False (mismas condiciones que un .engine)")
     args=ap.parse_args()
+
+    weights=WEIGHTS[args.model]
+    if args.weights:
+        weights=Path(args.weights)
+        if not weights.is_absolute():
+            weights=PROJECT_ROOT/weights
+    if not weights.exists():
+        raise FileNotFoundError(f"No existen los pesos: {weights}")
 
     #Configuración según el modo
     if args.dataset=="visdrone_val10":
@@ -224,10 +254,11 @@ def main():
     Validator.cls_map=cls_map
     Validator.use_ignore=use_ignore
 
-    model=(RTDETR if is_rtdetr else YOLO)(str(WEIGHTS[args.model]))
+    model=(RTDETR if is_rtdetr else YOLO)(str(weights))
     batch=args.batch or DEFAULT_BATCH[args.model]
-    tag=f"{args.model}__{args.dataset}"
-    print(f"== {tag} · {data} · batch {batch}")
+    tag=f"{args.model}__{args.dataset}{args.suffix}"
+    extra={"rect":False} if args.no_rect else {}  #sin --no-rect se conserva el default de Ultralytics
+    print(f"== {tag} · {rel(weights)} · {data} · batch {batch}{' · rect=False' if args.no_rect else ''}")
 
     t0=time.time()
     metrics=model.val(
@@ -237,6 +268,7 @@ def main():
         conf=0.001, iou=0.7, max_det=300, half=False,
         device=args.device, plots=False, verbose=True,
         project=str(PROJECT_ROOT/"runs"/"cross_eval"), name=tag, exist_ok=True,
+        **extra,
     )
     elapsed=time.time()-t0
     v=CrossEvalMixin.instance
@@ -252,12 +284,14 @@ def main():
                                     "instances":int(metrics.nt_per_class[int(c)])}
 
     result={
-        "model":args.model, "weights":str(WEIGHTS[args.model].relative_to(PROJECT_ROOT)),
+        "model":args.model, "weights":rel(weights), "format":weights.suffix.lstrip("."),
         "dataset":args.dataset, "images":v.seen, "instances":int(metrics.nt_per_class.sum()),
         "mAP50":round(map50, 4), "mAP50-95":round(map5095, 4),
         "P":round(mp, 4), "R":round(mr, 4), "F1":round(f1, 4),
         "per_class":per_class,
-        "params":{"imgsz":1280, "conf":0.001, "iou":0.7, "max_det":300, "half":False, "batch":batch,
+        #batch y rect efectivos: con un .engine estático Ultralytics los fuerza a 1 y False
+        "params":{"imgsz":1280, "conf":0.001, "iou":0.7, "max_det":300, "half":False,
+                  "batch":int(v.args.batch), "rect":bool(v.args.rect),
                   "class_map":cls_map, "ignore_zones":use_ignore, "ignore_frac":IGNORE_FRAC},
         "seconds":round(elapsed, 1),
     }
@@ -271,6 +305,7 @@ def main():
 
     print(f"\n{'='*60}\n{tag}")
     print(f"Imágenes:{v.seen} · Instancias:{result['instances']:,} · Tiempo:{elapsed/60:.1f} min")
+    print(f"Pesos:{rel(weights)} · batch efectivo={v.args.batch} · rect={v.args.rect}")
     print(f"mAP@0.5={map50:.4f} · mAP@0.5:0.95={map5095:.4f} · P={mp:.4f} · R={mr:.4f} · F1={f1:.4f}")
     if args.dataset=="visdrone_val10":
         ref={"yolov8n":0.4755, "rtdetr":0.5114}[args.model]
