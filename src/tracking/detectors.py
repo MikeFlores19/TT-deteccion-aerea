@@ -10,11 +10,26 @@ indexacion VisDrone-MOT (1-10) se aplica al escribir resultados.
 """
 
 
+import json
+
 import numpy as np
 from ultralytics import YOLO, RTDETR
 
 #imgsz fijo en 1280 igual que en la fase 2 , para que la comparacion entre detectores siga siendo justa
 IMGSZ=1280
+
+
+def imgsz_de_engine(ruta):
+    """Fase 5: lee el imgsz [alto,ancho] de un .engine de Ultralytics.
+
+    Un .engine tiene forma de entrada fija; Ultralytics guarda al inicio del archivo
+    sus metadatos (4 bytes de longitud + JSON). Pasar imgsz=1280 a un engine de
+    736x1280 provoca 'input size not equal to max model size'.
+    """
+    with open(ruta,"rb") as f:
+        n=int.from_bytes(f.read(4),byteorder="little")
+        meta=json.loads(f.read(n).decode("utf-8"))
+    return [int(v) for v in meta["imgsz"]]
 
 #confianza muy baja a porposito: BYtrack necesita las detecciones d ebaja confianza para us segunda asociacion. Cada tracker aplica despues su propio umbral
 CONF_MINIMA=0.01
@@ -28,6 +43,8 @@ class DetectorBase:
     def __init__(self,ruta_pesos,dispositivo="cuda:0"):
         self.ruta_pesos=str(ruta_pesos)
         self.dispositivo=dispositivo
+        #.pt -> 1280 (comportamiento anterior); .engine -> la forma con la que se compilo
+        self.imgsz=imgsz_de_engine(self.ruta_pesos) if self.ruta_pesos.endswith(".engine") else IMGSZ
         self.modelo=self._cargar()
 
     def _cargar(self):
@@ -37,7 +54,7 @@ class DetectorBase:
         """Devuelve (N,6) [x1,y1,x2,y2,conf,cls] en pixeles absolutos."""
         salida=self.modelo.predict(
             frame,
-            imgsz=IMGSZ,
+            imgsz=self.imgsz,
             conf=CONF_MINIMA,
             device=self.dispositivo,
             verbose=False,
@@ -56,7 +73,8 @@ class DetectorBase:
 
 class YOLOv8nDetector(DetectorBase):
     def _cargar(self):
-        return YOLO(self.ruta_pesos)
+        #task explicito: con un .engine Ultralytics no puede adivinarlo (evita el WARNING)
+        return YOLO(self.ruta_pesos,task="detect")
 
 
 class RTDETRDetector(DetectorBase):
