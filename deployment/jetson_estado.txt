@@ -1,0 +1,42 @@
+=== SO / L4T / JetPack ===
+Ubuntu 22.04.5 LTS
+# R36 (release), REVISION: 4.7, GCID: 42132812, BOARD: generic, EABI: aarch64, DATE: Thu Sep 18 22:54:44 UTC 2025
+nvidia-l4t-core 36.4.7-20250918154033
+=== CUDA ===
+Cuda compilation tools, release 12.6, V12.6.68
+Build cuda_12.6.r12.6/compiler.34714021_0
+/usr/local/cuda
+/usr/local/cuda-12
+/usr/local/cuda-12.6
+=== cuDNN / TensorRT ===
+libcudnn9-cuda-12 9.3.0.75-1
+libcudnn9-dev-cuda-12 9.3.0.75-1
+libcudnn9-samples 9.3.0.75-1
+libcudnn9-static-cuda-12 9.3.0.75-1
+libnvinfer10 10.3.0.30-1+cuda12.5
+tensorrt 10.3.0.30-1+cuda12.5
+tensorrt (python): 10.3.0
+=== Python ===
+Python 3.10.12
+/usr/bin/python3: No module named pip
+=== Disco / RAM / swap ===
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/mmcblk0p1   57G   22G   33G  41% /
+               total        used        free      shared  buff/cache   available
+Mem:           7.4Gi       404Mi       6.3Gi        18Mi       787Mi       6.8Gi
+Swap:          3.7Gi          0B       3.7Gi
+=== Modo de energía ===
+NV Power Mode: 25W
+1
+# < POWER_MODEL ID=id_num NAME=mode_name >
+# This starts a section of POWER_MODEL configurations, followed by
+# This file must contain at least one POWER_MODEL section.
+# POWER_MODEL DEFINITIONS #
+< POWER_MODEL ID=0 NAME=15W >
+< POWER_MODEL ID=1 NAME=25W >
+< POWER_MODEL ID=2 NAME=MAXN_SUPER >
+< POWER_MODEL ID=3 NAME=7W >
+=== Monitoreo ===
+/usr/bin/tegrastats
+10-06-2026 17:49:30 RAM 460/7620MB (lfb 2x4MB) SWAP 0/3810MB (cached 0MB) CPU [0%@1344,0%@729,0%@729,0%@729,0%@729,0%@729] EMC_FREQ 16%@204 GR3D_FREQ 0%@[305] NVDEC off NVJPG off NVJPG1 off VIC off OFA off APE 200 cpu@47.375C soc2@47.062C soc0@47.593C gpu@48.562C tj@48.562C soc1@46.937C VDD_IN 5191mW/5191mW VDD_CPU_GPU_CV 519mW/519mW VDD_SOC 2555mW/2555mW
+10-06-2026 17:49:31 RAM 460/7620MB (lfb 2x4MB) SWAP 0/3810MB (cached 0MB) CPU [0%@1344,0%@729,0%@729,0%@729,0%@729,0%@729] EMC_FREQ 15%@204 GR3D_FREQ 0%@[305] NVDEC off NVJPG off NVJPG1 off VIC off OFA off APE 200 cpu@47.218C soc2@47.062C soc0@47.593C gpu@48.937C tj@48.937C soc1@46.937C VDD_IN 5151mW/5171mW VDD_CPU_GPU_CV 479mW/499mW VDD_SOC 2555mW/2555mW

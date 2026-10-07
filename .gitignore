@@ -12,6 +12,7 @@ __pycache__/
 
 # Modelos compilados (device-specific)
 *.engine
+*.onnx
 
 # VS Code
 .vscode/
