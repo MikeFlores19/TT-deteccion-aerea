@@ -59,6 +59,8 @@ class DetectorBase:
             device=self.dispositivo,
             verbose=False,
         )[0]
+        #Fase 5 (benchmark): ms de preproceso, inferencia y postproceso medidos por Ultralytics
+        self.speed=salida.speed
 
         cajas=salida.boxes
         if cajas is None or len(cajas)==0:
