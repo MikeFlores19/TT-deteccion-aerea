@@ -1,0 +1,856 @@
+{
+  "modo": "ram",
+  "nota": "Metodologia de benchmark_fps.py (Fase 3): frames en RAM, detector+tracker en el mismo bucle, torch.cuda.synchronize. pre/inf/post son los tiempos internos de Ultralytics.",
+  "warmup": 30,
+  "entorno": {
+    "host": "magicmike-jetson",
+    "nvpmodel": "MAXN_SUPER (ID 2)",
+    "l4t": "R36 (release), REVISION: 4.7, GCID: 42132812, BOARD: generic, EABI: aarch64, DATE: Thu Sep 18 22:54:44 UTC 2025",
+    "torch": "2.10.0",
+    "ultralytics": "8.4.37",
+    "gpu": "Orin",
+    "tensorrt": "10.3.0"
+  },
+  "resultados": [
+    {
+      "secuencia": "uav0000086_00000_v",
+      "resolucion": "1344x756",
+      "pesos": "runs/yolov8n/yolov8n_mosaic10_20260606_0315/weights/best.pt",
+      "formato": "pt",
+      "imgsz": 1280,
+      "frames": 200,
+      "deteccion_ms": {
+        "media": 47.34,
+        "p50": 48.64,
+        "p95": 54.34,
+        "min": 39.59,
+        "max": 56.64
+      },
+      "pre_ms": {
+        "media": 9.54,
+        "p50": 9.62,
+        "p95": 9.97,
+        "min": 8.77,
+        "max": 10.31
+      },
+      "inferencia_ms": {
+        "media": 32.32,
+        "p50": 33.66,
+        "p95": 38.27,
+        "min": 25.75,
+        "max": 39.34
+      },
+      "post_ms": {
+        "media": 3.96,
+        "p50": 3.98,
+        "p95": 4.4,
+        "min": 3.4,
+        "max": 4.77
+      },
+      "tracking_ms": {
+        "media": 17.15,
+        "p50": 16.56,
+        "p95": 20.17,
+        "min": 10.94,
+        "max": 22.24
+      },
+      "total_ms": 64.49,
+      "fps": 15.51,
+      "fps_reloj": 15.5,
+      "pct_tracker": 26.6,
+      "torch_max_mem_mb": 66.2,
+      "energia": {
+        "potencia_media_w": 8.44,
+        "potencia_max_w": 8.86,
+        "energia_j_por_frame": 0.5441,
+        "potencia_reposo_w": 2.9,
+        "potencia_dinamica_w": 5.54,
+        "energia_dinamica_j_por_frame": 0.3571,
+        "ram_delta_media_mb": 1357.3,
+        "ram_delta_max_mb": 1364.5
+      },
+      "tegrastats": {
+        "n_muestras": 26,
+        "VDD_IN_mw": {
+          "media": 8435.69,
+          "p50": 8465.0,
+          "p95": 8743.0,
+          "min": 8001.0,
+          "max": 8862.0
+        },
+        "VDD_CPU_GPU_CV_mw": {
+          "media": 3733.15,
+          "p50": 3749.0,
+          "p95": 4030.25,
+          "min": 3372.0,
+          "max": 4159.0
+        },
+        "VDD_SOC_mw": {
+          "media": 1958.0,
+          "p50": 1947.0,
+          "p95": 1987.0,
+          "min": 1907.0,
+          "max": 1987.0
+        },
+        "ram_mb": {
+          "media": 2165.81,
+          "p50": 2166.0,
+          "p95": 2173.0,
+          "min": 2159.0,
+          "max": 2173.0
+        },
+        "swap_mb": {
+          "media": 1.0,
+          "p50": 1.0,
+          "p95": 1.0,
+          "min": 1.0,
+          "max": 1.0
+        },
+        "gpu_pct": {
+          "media": 67.15,
+          "p50": 90.0,
+          "p95": 99.0,
+          "min": 0.0,
+          "max": 99.0
+        },
+        "cpu_pct": {
+          "media": 12.99,
+          "p50": 12.8,
+          "p95": 13.78,
+          "min": 12.2,
+          "max": 13.8
+        },
+        "temp_cpu": {
+          "media": 43.9,
+          "p50": 43.94,
+          "p95": 44.51,
+          "min": 43.12,
+          "max": 44.62
+        },
+        "temp_gpu": {
+          "media": 46.09,
+          "p50": 46.09,
+          "p95": 46.77,
+          "min": 45.12,
+          "max": 47.19
+        },
+        "temp_tj": {
+          "media": 46.1,
+          "p50": 46.09,
+          "p95": 46.77,
+          "min": 45.12,
+          "max": 47.19
+        },
+        "gpu_mhz": {
+          "media": 749.31,
+          "p50": 612.0,
+          "p95": 1020.0,
+          "min": 510.0,
+          "max": 1020.0
+        }
+      }
+    },
+    {
+      "secuencia": "uav0000086_00000_v",
+      "resolucion": "1344x756",
+      "pesos": "runs/yolov8n/yolov8n_mosaic10_20260606_0315/weights/best_1280x1280.engine",
+      "formato": "engine",
+      "imgsz": [
+        1280,
+        1280
+      ],
+      "frames": 200,
+      "deteccion_ms": {
+        "media": 47.45,
+        "p50": 52.13,
+        "p95": 54.16,
+        "min": 31.9,
+        "max": 56.51
+      },
+      "pre_ms": {
+        "media": 11.49,
+        "p50": 11.51,
+        "p95": 12.66,
+        "min": 9.49,
+        "max": 14.29
+      },
+      "inferencia_ms": {
+        "media": 27.99,
+        "p50": 32.85,
+        "p95": 33.31,
+        "min": 15.9,
+        "max": 33.36
+      },
+      "post_ms": {
+        "media": 5.96,
+        "p50": 6.01,
+        "p95": 6.52,
+        "min": 4.8,
+        "max": 7.23
+      },
+      "tracking_ms": {
+        "media": 26.72,
+        "p50": 26.55,
+        "p95": 31.25,
+        "min": 16.82,
+        "max": 36.88
+      },
+      "total_ms": 74.17,
+      "fps": 13.48,
+      "fps_reloj": 13.48,
+      "pct_tracker": 36.0,
+      "torch_max_mem_mb": 44.0,
+      "energia": {
+        "potencia_media_w": 5.65,
+        "potencia_max_w": 5.83,
+        "energia_j_por_frame": 0.4187,
+        "potencia_reposo_w": 2.9,
+        "potencia_dinamica_w": 2.75,
+        "energia_dinamica_j_por_frame": 0.2036,
+        "ram_delta_media_mb": 1436.5,
+        "ram_delta_max_mb": 1438.5
+      },
+      "tegrastats": {
+        "n_muestras": 29,
+        "VDD_IN_mw": {
+          "media": 5645.17,
+          "p50": 5640.0,
+          "p95": 5798.0,
+          "min": 5480.0,
+          "max": 5830.0
+        },
+        "VDD_CPU_GPU_CV_mw": {
+          "media": 1645.17,
+          "p50": 1637.0,
+          "p95": 1757.0,
+          "min": 1477.0,
+          "max": 1794.0
+        },
+        "VDD_SOC_mw": {
+          "media": 1630.93,
+          "p50": 1637.0,
+          "p95": 1662.2,
+          "min": 1600.0,
+          "max": 1677.0
+        },
+        "ram_mb": {
+          "media": 2245.03,
+          "p50": 2245.0,
+          "p95": 2247.0,
+          "min": 2244.0,
+          "max": 2247.0
+        },
+        "swap_mb": {
+          "media": 1.0,
+          "p50": 1.0,
+          "p95": 1.0,
+          "min": 1.0,
+          "max": 1.0
+        },
+        "gpu_pct": {
+          "media": 36.86,
+          "p50": 26.0,
+          "p95": 98.2,
+          "min": 0.0,
+          "max": 99.0
+        },
+        "cpu_pct": {
+          "media": 10.89,
+          "p50": 10.8,
+          "p95": 11.8,
+          "min": 9.8,
+          "max": 12.0
+        },
+        "temp_cpu": {
+          "media": 44.25,
+          "p50": 44.25,
+          "p95": 44.52,
+          "min": 43.91,
+          "max": 44.56
+        },
+        "temp_gpu": {
+          "media": 46.14,
+          "p50": 46.12,
+          "p95": 46.47,
+          "min": 45.56,
+          "max": 46.59
+        },
+        "temp_tj": {
+          "media": 46.16,
+          "p50": 46.12,
+          "p95": 46.56,
+          "min": 45.56,
+          "max": 46.66
+        },
+        "gpu_mhz": {
+          "media": 464.28,
+          "p50": 408.0,
+          "p95": 714.0,
+          "min": 306.0,
+          "max": 714.0
+        }
+      }
+    },
+    {
+      "secuencia": "uav0000086_00000_v",
+      "resolucion": "1344x756",
+      "pesos": "runs/yolov8n/yolov8n_mosaic10_20260606_0315/weights/best_736x1280.engine",
+      "formato": "engine",
+      "imgsz": [
+        736,
+        1280
+      ],
+      "frames": 200,
+      "deteccion_ms": {
+        "media": 38.93,
+        "p50": 36.56,
+        "p95": 44.82,
+        "min": 34.67,
+        "max": 47.47
+      },
+      "pre_ms": {
+        "media": 8.99,
+        "p50": 8.63,
+        "p95": 10.31,
+        "min": 7.82,
+        "max": 11.05
+      },
+      "inferencia_ms": {
+        "media": 21.73,
+        "p50": 20.14,
+        "p95": 25.16,
+        "min": 19.94,
+        "max": 25.84
+      },
+      "post_ms": {
+        "media": 6.17,
+        "p50": 5.98,
+        "p95": 7.29,
+        "min": 4.99,
+        "max": 7.69
+      },
+      "tracking_ms": {
+        "media": 24.83,
+        "p50": 24.23,
+        "p95": 28.55,
+        "min": 15.4,
+        "max": 30.25
+      },
+      "total_ms": 63.77,
+      "fps": 15.68,
+      "fps_reloj": 15.68,
+      "pct_tracker": 38.9,
+      "torch_max_mem_mb": 25.5,
+      "energia": {
+        "potencia_media_w": 4.94,
+        "potencia_max_w": 5.24,
+        "energia_j_por_frame": 0.3151,
+        "potencia_reposo_w": 2.9,
+        "potencia_dinamica_w": 2.04,
+        "energia_dinamica_j_por_frame": 0.1301,
+        "ram_delta_media_mb": 1448.2,
+        "ram_delta_max_mb": 1448.5
+      },
+      "tegrastats": {
+        "n_muestras": 25,
+        "VDD_IN_mw": {
+          "media": 4940.4,
+          "p50": 5120.0,
+          "p95": 5232.0,
+          "min": 4527.0,
+          "max": 5240.0
+        },
+        "VDD_CPU_GPU_CV_mw": {
+          "media": 1347.24,
+          "p50": 1357.0,
+          "p95": 1397.0,
+          "min": 1280.0,
+          "max": 1400.0
+        },
+        "VDD_SOC_mw": {
+          "media": 1422.84,
+          "p50": 1560.0,
+          "p95": 1560.0,
+          "min": 1201.0,
+          "max": 1560.0
+        },
+        "ram_mb": {
+          "media": 2256.68,
+          "p50": 2257.0,
+          "p95": 2257.0,
+          "min": 2256.0,
+          "max": 2257.0
+        },
+        "swap_mb": {
+          "media": 1.0,
+          "p50": 1.0,
+          "p95": 1.0,
+          "min": 1.0,
+          "max": 1.0
+        },
+        "gpu_pct": {
+          "media": 45.64,
+          "p50": 31.0,
+          "p95": 97.0,
+          "min": 0.0,
+          "max": 98.0
+        },
+        "cpu_pct": {
+          "media": 11.65,
+          "p50": 11.7,
+          "p95": 12.2,
+          "min": 11.2,
+          "max": 12.2
+        },
+        "temp_cpu": {
+          "media": 44.62,
+          "p50": 44.66,
+          "p95": 44.77,
+          "min": 44.38,
+          "max": 44.81
+        },
+        "temp_gpu": {
+          "media": 46.41,
+          "p50": 46.44,
+          "p95": 46.67,
+          "min": 46.0,
+          "max": 46.72
+        },
+        "temp_tj": {
+          "media": 46.41,
+          "p50": 46.44,
+          "p95": 46.67,
+          "min": 46.0,
+          "max": 46.72
+        },
+        "gpu_mhz": {
+          "media": 306.0,
+          "p50": 306.0,
+          "p95": 306.0,
+          "min": 306.0,
+          "max": 306.0
+        }
+      }
+    },
+    {
+      "secuencia": "uav0000268_05773_v",
+      "resolucion": "3840x2160",
+      "pesos": "runs/yolov8n/yolov8n_mosaic10_20260606_0315/weights/best.pt",
+      "formato": "pt",
+      "imgsz": 1280,
+      "frames": 105,
+      "deteccion_ms": {
+        "media": 39.34,
+        "p50": 39.32,
+        "p95": 39.85,
+        "min": 39.01,
+        "max": 40.79
+      },
+      "pre_ms": {
+        "media": 6.8,
+        "p50": 6.76,
+        "p95": 6.95,
+        "min": 6.67,
+        "max": 7.46
+      },
+      "inferencia_ms": {
+        "media": 28.03,
+        "p50": 28.0,
+        "p95": 28.14,
+        "min": 27.93,
+        "max": 28.16
+      },
+      "post_ms": {
+        "media": 3.26,
+        "p50": 3.17,
+        "p95": 3.66,
+        "min": 3.07,
+        "max": 3.76
+      },
+      "tracking_ms": {
+        "media": 4.25,
+        "p50": 4.21,
+        "p95": 5.18,
+        "min": 2.45,
+        "max": 5.78
+      },
+      "total_ms": 43.6,
+      "fps": 22.94,
+      "fps_reloj": 22.94,
+      "pct_tracker": 9.8,
+      "torch_max_mem_mb": 66.2,
+      "energia": {
+        "potencia_media_w": 11.39,
+        "potencia_max_w": 11.59,
+        "energia_j_por_frame": 0.4965,
+        "potencia_reposo_w": 2.9,
+        "potencia_dinamica_w": 8.49,
+        "energia_dinamica_j_por_frame": 0.3701,
+        "ram_delta_media_mb": 3387.1,
+        "ram_delta_max_mb": 3387.5
+      },
+      "tegrastats": {
+        "n_muestras": 9,
+        "VDD_IN_mw": {
+          "media": 11388.0,
+          "p50": 11470.0,
+          "p95": 11588.0,
+          "min": 10577.0,
+          "max": 11588.0
+        },
+        "VDD_CPU_GPU_CV_mw": {
+          "media": 4711.0,
+          "p50": 4730.0,
+          "p95": 4770.0,
+          "min": 4580.0,
+          "max": 4770.0
+        },
+        "VDD_SOC_mw": {
+          "media": 3383.89,
+          "p50": 3480.0,
+          "p95": 3520.0,
+          "min": 2812.0,
+          "max": 3520.0
+        },
+        "ram_mb": {
+          "media": 4195.56,
+          "p50": 4196.0,
+          "p95": 4196.0,
+          "min": 4195.0,
+          "max": 4196.0
+        },
+        "swap_mb": {
+          "media": 1.0,
+          "p50": 1.0,
+          "p95": 1.0,
+          "min": 1.0,
+          "max": 1.0
+        },
+        "gpu_pct": {
+          "media": 78.11,
+          "p50": 96.0,
+          "p95": 98.6,
+          "min": 27.0,
+          "max": 99.0
+        },
+        "cpu_pct": {
+          "media": 12.54,
+          "p50": 12.7,
+          "p95": 12.8,
+          "min": 12.0,
+          "max": 12.8
+        },
+        "temp_cpu": {
+          "media": 46.2,
+          "p50": 46.19,
+          "p95": 46.63,
+          "min": 45.62,
+          "max": 46.66
+        },
+        "temp_gpu": {
+          "media": 48.58,
+          "p50": 48.62,
+          "p95": 48.97,
+          "min": 48.0,
+          "max": 49.0
+        },
+        "temp_tj": {
+          "media": 48.58,
+          "p50": 48.62,
+          "p95": 48.97,
+          "min": 48.0,
+          "max": 49.0
+        },
+        "gpu_mhz": {
+          "media": 714.0,
+          "p50": 714.0,
+          "p95": 714.0,
+          "min": 714.0,
+          "max": 714.0
+        }
+      }
+    },
+    {
+      "secuencia": "uav0000268_05773_v",
+      "resolucion": "3840x2160",
+      "pesos": "runs/yolov8n/yolov8n_mosaic10_20260606_0315/weights/best_1280x1280.engine",
+      "formato": "engine",
+      "imgsz": [
+        1280,
+        1280
+      ],
+      "frames": 105,
+      "deteccion_ms": {
+        "media": 52.1,
+        "p50": 49.26,
+        "p95": 60.64,
+        "min": 39.81,
+        "max": 61.12
+      },
+      "pre_ms": {
+        "media": 16.1,
+        "p50": 15.79,
+        "p95": 18.08,
+        "min": 12.68,
+        "max": 18.15
+      },
+      "inferencia_ms": {
+        "media": 27.55,
+        "p50": 25.58,
+        "p95": 33.42,
+        "min": 16.06,
+        "max": 33.45
+      },
+      "post_ms": {
+        "media": 6.29,
+        "p50": 6.23,
+        "p95": 6.9,
+        "min": 5.57,
+        "max": 7.28
+      },
+      "tracking_ms": {
+        "media": 8.53,
+        "p50": 8.28,
+        "p95": 11.03,
+        "min": 4.76,
+        "max": 12.49
+      },
+      "total_ms": 60.63,
+      "fps": 16.49,
+      "fps_reloj": 16.49,
+      "pct_tracker": 14.1,
+      "torch_max_mem_mb": 44.0,
+      "energia": {
+        "potencia_media_w": 5.95,
+        "potencia_max_w": 6.11,
+        "energia_j_por_frame": 0.3608,
+        "potencia_reposo_w": 2.9,
+        "potencia_dinamica_w": 3.05,
+        "energia_dinamica_j_por_frame": 0.185,
+        "ram_delta_media_mb": 3385.5,
+        "ram_delta_max_mb": 3385.5
+      },
+      "tegrastats": {
+        "n_muestras": 12,
+        "VDD_IN_mw": {
+          "media": 5950.0,
+          "p50": 5990.0,
+          "p95": 6110.0,
+          "min": 5750.0,
+          "max": 6110.0
+        },
+        "VDD_CPU_GPU_CV_mw": {
+          "media": 1714.0,
+          "p50": 1734.0,
+          "p95": 1794.0,
+          "min": 1594.0,
+          "max": 1794.0
+        },
+        "VDD_SOC_mw": {
+          "media": 1713.67,
+          "p50": 1717.0,
+          "p95": 1757.0,
+          "min": 1677.0,
+          "max": 1757.0
+        },
+        "ram_mb": {
+          "media": 4194.0,
+          "p50": 4194.0,
+          "p95": 4194.0,
+          "min": 4194.0,
+          "max": 4194.0
+        },
+        "swap_mb": {
+          "media": 1.0,
+          "p50": 1.0,
+          "p95": 1.0,
+          "min": 1.0,
+          "max": 1.0
+        },
+        "gpu_pct": {
+          "media": 39.42,
+          "p50": 31.0,
+          "p95": 96.8,
+          "min": 0.0,
+          "max": 99.0
+        },
+        "cpu_pct": {
+          "media": 10.04,
+          "p50": 10.1,
+          "p95": 10.59,
+          "min": 9.3,
+          "max": 10.7
+        },
+        "temp_cpu": {
+          "media": 45.77,
+          "p50": 45.77,
+          "p95": 45.97,
+          "min": 45.62,
+          "max": 46.09
+        },
+        "temp_gpu": {
+          "media": 47.64,
+          "p50": 47.61,
+          "p95": 47.81,
+          "min": 47.44,
+          "max": 47.88
+        },
+        "temp_tj": {
+          "media": 47.62,
+          "p50": 47.61,
+          "p95": 47.73,
+          "min": 47.44,
+          "max": 47.75
+        },
+        "gpu_mhz": {
+          "media": 391.0,
+          "p50": 408.0,
+          "p95": 545.7,
+          "min": 306.0,
+          "max": 714.0
+        }
+      }
+    },
+    {
+      "secuencia": "uav0000268_05773_v",
+      "resolucion": "3840x2160",
+      "pesos": "runs/yolov8n/yolov8n_mosaic10_20260606_0315/weights/best_736x1280.engine",
+      "formato": "engine",
+      "imgsz": [
+        736,
+        1280
+      ],
+      "frames": 105,
+      "deteccion_ms": {
+        "media": 40.44,
+        "p50": 40.38,
+        "p95": 41.24,
+        "min": 38.83,
+        "max": 42.27
+      },
+      "pre_ms": {
+        "media": 12.22,
+        "p50": 12.19,
+        "p95": 12.88,
+        "min": 10.85,
+        "max": 13.09
+      },
+      "inferencia_ms": {
+        "media": 20.12,
+        "p50": 20.09,
+        "p95": 20.29,
+        "min": 20.04,
+        "max": 20.79
+      },
+      "post_ms": {
+        "media": 6.05,
+        "p50": 6.0,
+        "p95": 6.43,
+        "min": 5.53,
+        "max": 7.13
+      },
+      "tracking_ms": {
+        "media": 7.74,
+        "p50": 7.58,
+        "p95": 9.56,
+        "min": 4.16,
+        "max": 10.86
+      },
+      "total_ms": 48.17,
+      "fps": 20.76,
+      "fps_reloj": 20.75,
+      "pct_tracker": 16.1,
+      "torch_max_mem_mb": 25.5,
+      "energia": {
+        "potencia_media_w": 5.37,
+        "potencia_max_w": 5.44,
+        "energia_j_por_frame": 0.2588,
+        "potencia_reposo_w": 2.9,
+        "potencia_dinamica_w": 2.47,
+        "energia_dinamica_j_por_frame": 0.1191,
+        "ram_delta_media_mb": 3385.5,
+        "ram_delta_max_mb": 3385.5
+      },
+      "tegrastats": {
+        "n_muestras": 10,
+        "VDD_IN_mw": {
+          "media": 5372.0,
+          "p50": 5360.0,
+          "p95": 5422.0,
+          "min": 5320.0,
+          "max": 5440.0
+        },
+        "VDD_CPU_GPU_CV_mw": {
+          "media": 1397.0,
+          "p50": 1397.0,
+          "p95": 1419.0,
+          "min": 1357.0,
+          "max": 1437.0
+        },
+        "VDD_SOC_mw": {
+          "media": 1623.7,
+          "p50": 1638.5,
+          "p95": 1640.0,
+          "min": 1600.0,
+          "max": 1640.0
+        },
+        "ram_mb": {
+          "media": 4194.0,
+          "p50": 4194.0,
+          "p95": 4194.0,
+          "min": 4194.0,
+          "max": 4194.0
+        },
+        "swap_mb": {
+          "media": 1.0,
+          "p50": 1.0,
+          "p95": 1.0,
+          "min": 1.0,
+          "max": 1.0
+        },
+        "gpu_pct": {
+          "media": 58.8,
+          "p50": 75.5,
+          "p95": 96.0,
+          "min": 2.0,
+          "max": 96.0
+        },
+        "cpu_pct": {
+          "media": 11.03,
+          "p50": 11.1,
+          "p95": 11.67,
+          "min": 10.2,
+          "max": 11.8
+        },
+        "temp_cpu": {
+          "media": 45.82,
+          "p50": 45.78,
+          "p95": 46.03,
+          "min": 45.62,
+          "max": 46.03
+        },
+        "temp_gpu": {
+          "media": 47.68,
+          "p50": 47.69,
+          "p95": 47.9,
+          "min": 47.34,
+          "max": 47.97
+        },
+        "temp_tj": {
+          "media": 47.7,
+          "p50": 47.72,
+          "p95": 47.9,
+          "min": 47.34,
+          "max": 47.97
+        },
+        "gpu_mhz": {
+          "media": 306.0,
+          "p50": 306.0,
+          "p95": 306.0,
+          "min": 306.0,
+          "max": 306.0
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,719 @@
+{
+  "modo": "video",
+  "pesos": "runs/yolov8n/yolov8n_mosaic10_20260606_0315/weights/best_736x1280.engine",
+  "imgsz": [
+    736,
+    1280
+  ],
+  "videos": 17,
+  "frames": 6635,
+  "warmup": 30,
+  "segundos": 293.65,
+  "fps_reloj": 22.59,
+  "fps_media_frames": 22.7,
+  "etapas": {
+    "lectura_ms": {
+      "media": 1.2,
+      "p50": 0.87,
+      "p95": 2.25,
+      "min": 0.33,
+      "max": 110.74
+    },
+    "pre_ms": {
+      "media": 6.0,
+      "p50": 5.45,
+      "p95": 8.56,
+      "min": 5.31,
+      "max": 9.01
+    },
+    "inferencia_ms": {
+      "media": 6.84,
+      "p50": 6.84,
+      "p95": 6.9,
+      "min": 6.78,
+      "max": 7.18
+    },
+    "post_ms": {
+      "media": 3.44,
+      "p50": 3.38,
+      "p95": 4.2,
+      "min": 2.96,
+      "max": 4.57
+    },
+    "deteccion_ms": {
+      "media": 17.58,
+      "p50": 17.01,
+      "p95": 20.33,
+      "min": 16.36,
+      "max": 21.28
+    },
+    "tracking_ms": {
+      "media": 25.27,
+      "p50": 23.08,
+      "p95": 60.23,
+      "min": 2.16,
+      "max": 238.94
+    },
+    "total_ms": {
+      "media": 44.06,
+      "p50": 41.89,
+      "p95": 79.99,
+      "min": 20.95,
+      "max": 258.04
+    },
+    "n_dets": {
+      "media": 254.59,
+      "p50": 300.0,
+      "p95": 300.0,
+      "min": 7.0,
+      "max": 300.0
+    }
+  },
+  "por_resolucion": {
+    "680x382": {
+      "frames": 420,
+      "fps": 23.34,
+      "lectura_ms": {
+        "media": 0.6,
+        "p50": 0.52,
+        "p95": 0.56,
+        "min": 0.33,
+        "max": 25.68
+      },
+      "pre_ms": {
+        "media": 7.41,
+        "p50": 7.41,
+        "p95": 7.5,
+        "min": 7.3,
+        "max": 7.85
+      },
+      "inferencia_ms": {
+        "media": 6.81,
+        "p50": 6.81,
+        "p95": 6.83,
+        "min": 6.79,
+        "max": 7.03
+      },
+      "post_ms": {
+        "media": 3.37,
+        "p50": 3.36,
+        "p95": 3.49,
+        "min": 3.19,
+        "max": 3.78
+      },
+      "deteccion_ms": {
+        "media": 18.81,
+        "p50": 18.8,
+        "p95": 19.02,
+        "min": 18.56,
+        "max": 19.66
+      },
+      "tracking_ms": {
+        "media": 23.43,
+        "p50": 22.99,
+        "p95": 30.45,
+        "min": 14.22,
+        "max": 32.96
+      },
+      "total_ms": {
+        "media": 42.84,
+        "p50": 42.35,
+        "p95": 50.07,
+        "min": 35.83,
+        "max": 62.24
+      },
+      "n_dets": {
+        "media": 295.7,
+        "p50": 300.0,
+        "p95": 300.0,
+        "min": 248.0,
+        "max": 300.0
+      }
+    },
+    "960x540": {
+      "frames": 864,
+      "fps": 18.31,
+      "lectura_ms": {
+        "media": 0.62,
+        "p50": 0.55,
+        "p95": 0.62,
+        "min": 0.38,
+        "max": 22.93
+      },
+      "pre_ms": {
+        "media": 8.55,
+        "p50": 8.54,
+        "p95": 8.64,
+        "min": 8.38,
+        "max": 9.01
+      },
+      "inferencia_ms": {
+        "media": 6.82,
+        "p50": 6.82,
+        "p95": 6.84,
+        "min": 6.78,
+        "max": 6.99
+      },
+      "post_ms": {
+        "media": 3.6,
+        "p50": 3.56,
+        "p95": 3.99,
+        "min": 3.22,
+        "max": 4.33
+      },
+      "deteccion_ms": {
+        "media": 20.24,
+        "p50": 20.19,
+        "p95": 20.68,
+        "min": 19.78,
+        "max": 21.28
+      },
+      "tracking_ms": {
+        "media": 33.75,
+        "p50": 33.94,
+        "p95": 43.35,
+        "min": 13.77,
+        "max": 45.41
+      },
+      "total_ms": {
+        "media": 54.61,
+        "p50": 54.65,
+        "p95": 64.54,
+        "min": 40.36,
+        "max": 71.53
+      },
+      "n_dets": {
+        "media": 300.0,
+        "p50": 300.0,
+        "p95": 300.0,
+        "min": 300.0,
+        "max": 300.0
+      }
+    },
+    "1344x756": {
+      "frames": 921,
+      "fps": 27.94,
+      "lectura_ms": {
+        "media": 1.01,
+        "p50": 0.84,
+        "p95": 0.96,
+        "min": 0.56,
+        "max": 39.24
+      },
+      "pre_ms": {
+        "media": 5.4,
+        "p50": 5.4,
+        "p95": 5.46,
+        "min": 5.32,
+        "max": 5.79
+      },
+      "inferencia_ms": {
+        "media": 6.85,
+        "p50": 6.84,
+        "p95": 6.88,
+        "min": 6.79,
+        "max": 7.18
+      },
+      "post_ms": {
+        "media": 3.3,
+        "p50": 3.29,
+        "p95": 3.47,
+        "min": 3.08,
+        "max": 4.03
+      },
+      "deteccion_ms": {
+        "media": 16.84,
+        "p50": 16.83,
+        "p95": 17.09,
+        "min": 16.5,
+        "max": 18.16
+      },
+      "tracking_ms": {
+        "media": 17.93,
+        "p50": 16.34,
+        "p95": 27.19,
+        "min": 9.51,
+        "max": 33.51
+      },
+      "total_ms": {
+        "media": 35.79,
+        "p50": 34.07,
+        "p95": 45.78,
+        "min": 28.01,
+        "max": 71.2
+      },
+      "n_dets": {
+        "media": 252.44,
+        "p50": 274.0,
+        "p95": 300.0,
+        "min": 85.0,
+        "max": 300.0
+      }
+    },
+    "1360x766": {
+      "frames": 2646,
+      "fps": 26.54,
+      "lectura_ms": {
+        "media": 0.98,
+        "p50": 0.87,
+        "p95": 0.95,
+        "min": 0.58,
+        "max": 38.11
+      },
+      "pre_ms": {
+        "media": 5.41,
+        "p50": 5.4,
+        "p95": 5.46,
+        "min": 5.31,
+        "max": 6.67
+      },
+      "inferencia_ms": {
+        "media": 6.84,
+        "p50": 6.84,
+        "p95": 6.87,
+        "min": 6.78,
+        "max": 7.07
+      },
+      "post_ms": {
+        "media": 3.31,
+        "p50": 3.35,
+        "p95": 3.49,
+        "min": 2.96,
+        "max": 4.31
+      },
+      "deteccion_ms": {
+        "media": 16.83,
+        "p50": 16.87,
+        "p95": 17.08,
+        "min": 16.36,
+        "max": 18.3
+      },
+      "tracking_ms": {
+        "media": 19.87,
+        "p50": 18.59,
+        "p95": 34.55,
+        "min": 3.79,
+        "max": 213.25
+      },
+      "total_ms": {
+        "media": 37.68,
+        "p50": 36.46,
+        "p95": 52.66,
+        "min": 20.95,
+        "max": 231.12
+      },
+      "n_dets": {
+        "media": 226.79,
+        "p50": 300.0,
+        "p95": 300.0,
+        "min": 7.0,
+        "max": 300.0
+      }
+    },
+    "1904x1072": {
+      "frames": 519,
+      "fps": 12.3,
+      "lectura_ms": {
+        "media": 1.88,
+        "p50": 1.5,
+        "p95": 2.03,
+        "min": 1.07,
+        "max": 65.97
+      },
+      "pre_ms": {
+        "media": 5.56,
+        "p50": 5.55,
+        "p95": 5.61,
+        "min": 5.45,
+        "max": 7.11
+      },
+      "inferencia_ms": {
+        "media": 6.87,
+        "p50": 6.87,
+        "p95": 6.9,
+        "min": 6.81,
+        "max": 7.1
+      },
+      "post_ms": {
+        "media": 4.21,
+        "p50": 4.22,
+        "p95": 4.39,
+        "min": 3.52,
+        "max": 4.57
+      },
+      "deteccion_ms": {
+        "media": 18.02,
+        "p50": 18.02,
+        "p95": 18.23,
+        "min": 17.3,
+        "max": 19.9
+      },
+      "tracking_ms": {
+        "media": 61.37,
+        "p50": 61.81,
+        "p95": 66.39,
+        "min": 35.5,
+        "max": 238.94
+      },
+      "total_ms": {
+        "media": 81.27,
+        "p50": 81.39,
+        "p95": 86.15,
+        "min": 55.02,
+        "max": 258.04
+      },
+      "n_dets": {
+        "media": 300.0,
+        "p50": 300.0,
+        "p95": 300.0,
+        "min": 300.0,
+        "max": 300.0
+      }
+    },
+    "1920x1080": {
+      "frames": 1000,
+      "fps": 21.99,
+      "lectura_ms": {
+        "media": 1.73,
+        "p50": 1.5,
+        "p95": 2.1,
+        "min": 1.04,
+        "max": 70.23
+      },
+      "pre_ms": {
+        "media": 5.52,
+        "p50": 5.5,
+        "p95": 5.57,
+        "min": 5.41,
+        "max": 8.26
+      },
+      "inferencia_ms": {
+        "media": 6.86,
+        "p50": 6.86,
+        "p95": 6.9,
+        "min": 6.79,
+        "max": 7.07
+      },
+      "post_ms": {
+        "media": 3.45,
+        "p50": 3.41,
+        "p95": 3.73,
+        "min": 3.14,
+        "max": 4.32
+      },
+      "deteccion_ms": {
+        "media": 17.18,
+        "p50": 17.14,
+        "p95": 17.53,
+        "min": 16.74,
+        "max": 20.85
+      },
+      "tracking_ms": {
+        "media": 26.56,
+        "p50": 28.48,
+        "p95": 37.01,
+        "min": 12.12,
+        "max": 41.24
+      },
+      "total_ms": {
+        "media": 45.47,
+        "p50": 47.15,
+        "p95": 56.11,
+        "min": 30.32,
+        "max": 101.84
+      },
+      "n_dets": {
+        "media": 293.24,
+        "p50": 300.0,
+        "p95": 300.0,
+        "min": 186.0,
+        "max": 300.0
+      }
+    },
+    "2720x1530": {
+      "frames": 265,
+      "fps": 38.83,
+      "lectura_ms": {
+        "media": 3.58,
+        "p50": 2.9,
+        "p95": 4.12,
+        "min": 2.61,
+        "max": 110.74
+      },
+      "pre_ms": {
+        "media": 6.26,
+        "p50": 6.26,
+        "p95": 6.33,
+        "min": 6.17,
+        "max": 6.65
+      },
+      "inferencia_ms": {
+        "media": 6.91,
+        "p50": 6.91,
+        "p95": 6.97,
+        "min": 6.81,
+        "max": 7.06
+      },
+      "post_ms": {
+        "media": 3.24,
+        "p50": 3.23,
+        "p95": 3.39,
+        "min": 3.08,
+        "max": 3.59
+      },
+      "deteccion_ms": {
+        "media": 17.81,
+        "p50": 17.79,
+        "p95": 18.07,
+        "min": 17.5,
+        "max": 18.4
+      },
+      "tracking_ms": {
+        "media": 4.36,
+        "p50": 4.16,
+        "p95": 5.91,
+        "min": 2.16,
+        "max": 7.08
+      },
+      "total_ms": {
+        "media": 25.75,
+        "p50": 25.02,
+        "p95": 27.36,
+        "min": 23.32,
+        "max": 131.04
+      },
+      "n_dets": {
+        "media": 91.53,
+        "p50": 93.0,
+        "p95": 129.8,
+        "min": 37.0,
+        "max": 142.0
+      }
+    }
+  },
+  "por_video": [
+    {
+      "video": "uav0000009_03358_v",
+      "resolucion": "1360x766",
+      "frames": 219,
+      "segundos": 9.43,
+      "fps": 23.22
+    },
+    {
+      "video": "uav0000073_00600_v",
+      "resolucion": "1920x1080",
+      "frames": 328,
+      "segundos": 15.97,
+      "fps": 20.54
+    },
+    {
+      "video": "uav0000073_04464_v",
+      "resolucion": "1920x1080",
+      "frames": 312,
+      "segundos": 16.07,
+      "fps": 19.42
+    },
+    {
+      "video": "uav0000077_00720_v",
+      "resolucion": "1360x766",
+      "frames": 780,
+      "segundos": 21.13,
+      "fps": 36.91
+    },
+    {
+      "video": "uav0000088_00290_v",
+      "resolucion": "960x540",
+      "frames": 296,
+      "segundos": 16.15,
+      "fps": 18.33
+    },
+    {
+      "video": "uav0000119_02301_v",
+      "resolucion": "1360x766",
+      "frames": 179,
+      "segundos": 7.32,
+      "fps": 24.45
+    },
+    {
+      "video": "uav0000120_04775_v",
+      "resolucion": "1360x766",
+      "frames": 1000,
+      "segundos": 44.99,
+      "fps": 22.23
+    },
+    {
+      "video": "uav0000161_00000_v",
+      "resolucion": "960x540",
+      "frames": 308,
+      "segundos": 19.22,
+      "fps": 16.02
+    },
+    {
+      "video": "uav0000188_00000_v",
+      "resolucion": "960x540",
+      "frames": 260,
+      "segundos": 11.85,
+      "fps": 21.93
+    },
+    {
+      "video": "uav0000201_00000_v",
+      "resolucion": "1344x756",
+      "frames": 677,
+      "segundos": 22.75,
+      "fps": 29.76
+    },
+    {
+      "video": "uav0000249_00001_v",
+      "resolucion": "1920x1080",
+      "frames": 360,
+      "segundos": 13.48,
+      "fps": 26.7
+    },
+    {
+      "video": "uav0000249_02688_v",
+      "resolucion": "1344x756",
+      "frames": 244,
+      "segundos": 10.25,
+      "fps": 23.81
+    },
+    {
+      "video": "uav0000297_00000_v",
+      "resolucion": "1904x1072",
+      "frames": 146,
+      "segundos": 11.82,
+      "fps": 12.35
+    },
+    {
+      "video": "uav0000297_02761_v",
+      "resolucion": "1904x1072",
+      "frames": 373,
+      "segundos": 30.39,
+      "fps": 12.28
+    },
+    {
+      "video": "uav0000306_00230_v",
+      "resolucion": "680x382",
+      "frames": 420,
+      "segundos": 18.01,
+      "fps": 23.32
+    },
+    {
+      "video": "uav0000355_00001_v",
+      "resolucion": "1360x766",
+      "frames": 468,
+      "segundos": 16.93,
+      "fps": 27.64
+    },
+    {
+      "video": "uav0000370_00001_v",
+      "resolucion": "2720x1530",
+      "frames": 265,
+      "segundos": 6.84,
+      "fps": 38.77
+    }
+  ],
+  "memoria": {
+    "torch_max_mem_mb": 25.5,
+    "rss_proceso_mb": 1280.2
+  },
+  "energia": {
+    "potencia_media_w": 8.74,
+    "potencia_max_w": 11.87,
+    "energia_j_por_frame": 0.3868,
+    "potencia_reposo_w": 2.9,
+    "potencia_dinamica_w": 5.84,
+    "energia_dinamica_j_por_frame": 0.2584,
+    "ram_delta_media_mb": 778.7,
+    "ram_delta_max_mb": 867.5
+  },
+  "tegrastats": {
+    "n_muestras": 582,
+    "VDD_IN_mw": {
+      "media": 8739.1,
+      "p50": 8544.0,
+      "p95": 10260.0,
+      "min": 7404.0,
+      "max": 11865.0
+    },
+    "VDD_CPU_GPU_CV_mw": {
+      "media": 3530.43,
+      "p50": 3409.0,
+      "p95": 4467.0,
+      "min": 2702.0,
+      "max": 5519.0
+    },
+    "VDD_SOC_mw": {
+      "media": 2690.8,
+      "p50": 2662.0,
+      "p95": 2971.0,
+      "min": 2464.0,
+      "max": 3124.0
+    },
+    "ram_mb": {
+      "media": 1587.24,
+      "p50": 1584.0,
+      "p95": 1618.0,
+      "min": 1509.0,
+      "max": 1676.0
+    },
+    "swap_mb": {
+      "media": 3.0,
+      "p50": 3.0,
+      "p95": 3.0,
+      "min": 3.0,
+      "max": 3.0
+    },
+    "gpu_pct": {
+      "media": 17.26,
+      "p50": 8.0,
+      "p95": 45.0,
+      "min": 0.0,
+      "max": 50.0
+    },
+    "cpu_pct": {
+      "media": 21.48,
+      "p50": 20.8,
+      "p95": 30.2,
+      "min": 15.5,
+      "max": 51.5
+    },
+    "temp_cpu": {
+      "media": 52.56,
+      "p50": 52.81,
+      "p95": 54.16,
+      "min": 48.44,
+      "max": 55.44
+    },
+    "temp_gpu": {
+      "media": 53.82,
+      "p50": 54.16,
+      "p95": 55.28,
+      "min": 50.03,
+      "max": 56.0
+    },
+    "temp_tj": {
+      "media": 53.81,
+      "p50": 54.16,
+      "p95": 55.25,
+      "min": 50.03,
+      "max": 56.0
+    },
+    "gpu_mhz": {
+      "media": 1020.0,
+      "p50": 1020.0,
+      "p95": 1020.0,
+      "min": 1020.0,
+      "max": 1020.0
+    }
+  },
+  "nota": "lectura_ms = espera en cap.read(); FFmpeg decodifica en hilos propios, asi que su costo de CPU aparece en cpu_pct de tegrastats y no completo en lectura_ms.",
+  "entorno": {
+    "host": "magicmike-jetson",
+    "nvpmodel": "MAXN_SUPER (ID 2)",
+    "l4t": "R36 (release), REVISION: 4.7, GCID: 42132812, BOARD: generic, EABI: aarch64, DATE: Thu Sep 18 22:54:44 UTC 2025",
+    "torch": "2.10.0",
+    "ultralytics": "8.4.37",
+    "gpu": "Orin",
+    "tensorrt": "10.3.0"
+  }
+}

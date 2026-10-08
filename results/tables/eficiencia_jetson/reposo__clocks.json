@@ -1,0 +1,89 @@
+{
+  "modo": "reposo",
+  "segundos": 60.1,
+  "entorno": {
+    "host": "magicmike-jetson",
+    "nvpmodel": "MAXN_SUPER (ID 2)",
+    "l4t": "R36 (release), REVISION: 4.7, GCID: 42132812, BOARD: generic, EABI: aarch64, DATE: Thu Sep 18 22:54:44 UTC 2025"
+  },
+  "tegrastats": {
+    "n_muestras": 119,
+    "VDD_IN_mw": {
+      "media": 5394.36,
+      "p50": 5391.0,
+      "p95": 5431.0,
+      "min": 5391.0,
+      "max": 5431.0
+    },
+    "VDD_CPU_GPU_CV_mw": {
+      "media": 1435.0,
+      "p50": 1435.0,
+      "p95": 1435.0,
+      "min": 1435.0,
+      "max": 1435.0
+    },
+    "VDD_SOC_mw": {
+      "media": 2196.0,
+      "p50": 2196.0,
+      "p95": 2196.0,
+      "min": 2196.0,
+      "max": 2196.0
+    },
+    "ram_mb": {
+      "media": 806.0,
+      "p50": 806.0,
+      "p95": 806.0,
+      "min": 806.0,
+      "max": 806.0
+    },
+    "swap_mb": {
+      "media": 3.0,
+      "p50": 3.0,
+      "p95": 3.0,
+      "min": 3.0,
+      "max": 3.0
+    },
+    "gpu_pct": {
+      "media": 0.0,
+      "p50": 0.0,
+      "p95": 0.0,
+      "min": 0.0,
+      "max": 0.0
+    },
+    "cpu_pct": {
+      "media": 0.06,
+      "p50": 0.0,
+      "p95": 0.2,
+      "min": 0.0,
+      "max": 0.7
+    },
+    "temp_cpu": {
+      "media": 47.48,
+      "p50": 47.47,
+      "p95": 47.72,
+      "min": 47.22,
+      "max": 47.81
+    },
+    "temp_gpu": {
+      "media": 49.22,
+      "p50": 49.19,
+      "p95": 49.56,
+      "min": 48.94,
+      "max": 49.59
+    },
+    "temp_tj": {
+      "media": 49.21,
+      "p50": 49.19,
+      "p95": 49.56,
+      "min": 48.94,
+      "max": 49.59
+    },
+    "gpu_mhz": {
+      "media": 1020.0,
+      "p50": 1020.0,
+      "p95": 1020.0,
+      "min": 1020.0,
+      "max": 1020.0
+    }
+  }
+}
