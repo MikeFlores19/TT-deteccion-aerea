@@ -1,0 +1,36 @@
+{
+  "fuente": "data/videos_prueba/uav0000119_02301_v.mp4",
+  "tipo": "video",
+  "resolucion": [
+    1360,
+    766
+  ],
+  "fps_fuente": 30.0,
+  "pesos": "runs/yolov8n/yolov8n_mosaic10_20260606_0315/weights/best_736x1280.engine",
+  "imgsz": [
+    736,
+    1280
+  ],
+  "frames": 179,
+  "tracks_frame": 8025,
+  "ids_unicos": 108,
+  "eventos": 108,
+  "min_frames": 1,
+  "segundos": {
+    "lectura": 0.27,
+    "deteccion": 6.8,
+    "tracking": 4.52,
+    "video": 3.06,
+    "total": 14.74
+  },
+  "ms_por_frame": {
+    "lectura": 1.52,
+    "deteccion": 37.98,
+    "tracking": 25.28,
+    "video": 17.08
+  },
+  "fps_pipeline": 15.44,
+  "fps_total": 12.14,
+  "video_anotado": "results/videos/jetson/val2_uav0000119_02301_v_mp4_normal.mp4",
+  "nota": "Tiempos de referencia del pipeline; el benchmark formal es el paso 6."
+}

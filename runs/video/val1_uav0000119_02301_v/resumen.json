@@ -1,0 +1,36 @@
+{
+  "fuente": "data/visdrone_mot/motchallenge/test-dev/uav0000119_02301_v/img1",
+  "tipo": "imagenes",
+  "resolucion": [
+    1360,
+    765
+  ],
+  "fps_fuente": 30.0,
+  "pesos": "runs/yolov8n/yolov8n_mosaic10_20260606_0315/weights/best_736x1280.engine",
+  "imgsz": [
+    736,
+    1280
+  ],
+  "frames": 179,
+  "tracks_frame": 7899,
+  "ids_unicos": 108,
+  "eventos": 108,
+  "min_frames": 1,
+  "segundos": {
+    "lectura": 6.08,
+    "deteccion": 10.95,
+    "tracking": 4.36,
+    "video": 3.2,
+    "total": 24.67
+  },
+  "ms_por_frame": {
+    "lectura": 33.96,
+    "deteccion": 61.19,
+    "tracking": 24.37,
+    "video": 17.85
+  },
+  "fps_pipeline": 8.37,
+  "fps_total": 7.25,
+  "video_anotado": "results/videos/jetson/val1_uav0000119_02301_v_normal.mp4",
+  "nota": "Tiempos de referencia del pipeline; el benchmark formal es el paso 6."
+}
