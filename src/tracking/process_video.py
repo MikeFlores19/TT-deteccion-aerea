@@ -15,7 +15,7 @@ Salidas:
     runs/video/<nombre>/results.txt    formato MOTChallenge (igual que run_tracking.py)
     runs/video/<nombre>/eventos.csv    registro estructurado: 1 fila por trayectoria (paso 5.3)
     runs/video/<nombre>/resumen.json   frames, tiempos por etapa y FPS del pipeline
-    results/videos/jetson/<nombre>_normal.mp4   video anotado (mismo estilo que visualize.py)
+    results/videos/jetson_normal/<nombre>_normal.mp4   video anotado (mismo estilo que visualize.py)
 
 Evento = trayectoria (un ID de ByteTrack). Columnas de eventos.csv:
     track_id, clase (la mas frecuente del track), clase_id (VisDrone-MOT 1-10),
@@ -48,7 +48,8 @@ from src.tracking.visualize import NOMBRES_CLASE, color_por_id, dibujar_caja
 
 PROJECT_ROOT=Path(__file__).parent.parent.parent
 RUNS_DIR=PROJECT_ROOT/"runs"/"video"
-VIDEOS_DIR=PROJECT_ROOT/"results"/"videos"/"jetson"
+#jetson_normal: separa estos videos (todas las cajas) de los de modo foco (jetson_foco/)
+VIDEOS_DIR=PROJECT_ROOT/"results"/"videos"/"jetson_normal"
 PESOS_DEF="runs/yolov8n/yolov8n_mosaic10_20260606_0315/weights/best.pt"
 
 #desfase de indexacion: YOLO 0-9 -> VisDrone-MOT 1-10 (igual que run_tracking.py)

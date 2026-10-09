@@ -31,6 +31,6 @@
   },
   "fps_pipeline": 15.44,
   "fps_total": 12.14,
-  "video_anotado": "results/videos/jetson/val2_uav0000119_02301_v_mp4_normal.mp4",
+  "video_anotado": "results/videos/jetson_normal/val2_uav0000119_02301_v_mp4_normal.mp4",
   "nota": "Tiempos de referencia del pipeline; el benchmark formal es el paso 6."
 }

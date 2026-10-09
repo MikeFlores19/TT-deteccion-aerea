@@ -31,6 +31,6 @@
   },
   "fps_pipeline": 43.58,
   "fps_total": 20.37,
-  "video_anotado": "results/videos/jetson/dji_video03_normal.mp4",
+  "video_anotado": "results/videos/jetson_normal/dji_video03_normal.mp4",
   "nota": "Tiempos de referencia del pipeline; el benchmark formal es el paso 6."
 }

@@ -11,11 +11,17 @@ modificar el script.
 
 Salida separada por dataset: results/videos/{visdrone,uavdt}/
 
+Fase 5 (paso 8.3): tambien acepta un .mp4 propio (--video) con el results.txt
+de process_video (--results). Los frames se numeran desde 1 igual que alla.
+Salida: results/videos/jetson_foco/<nombre>_focoID.mp4
+(el modo normal de los videos propios lo genera process_video en jetson_normal/)
+
 Uso:
   python -m src.tracking.visualize --config A --seq uav0000086_00000_v
   python -m src.tracking.visualize --config A --seq uav0000086_00000_v --focus-id 9
   python -m src.tracking.visualize --dataset uavdt --seq M1306
   python -m src.tracking.visualize --dataset uavdt --seq M1306 --focus-longest
+  python -m src.tracking.visualize --video data/dji_mini3/video01.mp4 --results runs/video/dji_video01/results.txt --focus-longest
 """
 
 import argparse
@@ -116,31 +122,79 @@ def id_mas_largo(por_frame):
     return tid,cuenta[tid]
 
 
-def generar(nombre_config,nombre_seq,focus_id,fps,max_frames,
-            dataset="visdrone",split=None,focus_longest=False):
-    mot_dir,tracking_dir,split_def=DATASETS[dataset]
-    split=split or split_def
-    dir_config=tracking_dir/CONFIGS[nombre_config]
-    ruta_tracks=dir_config/split/f"{nombre_seq}.txt"
-    if not ruta_tracks.exists():
-        raise FileNotFoundError(ruta_tracks)
+def iter_imagenes(frames):
+    """(n_frame,img) de la carpeta img1/; n_frame desde 1 como antes."""
+    for i,ruta in enumerate(frames,start=1):
+        img=cv2.imread(str(ruta))
+        if img is None:
+            raise RuntimeError(f"no se pudo leer {ruta}")
+        yield i,img
 
-    dir_img=mot_dir/split/nombre_seq/"img1"
-    frames=sorted(dir_img.glob("*.jpg"))
-    if max_frames:
-        frames=frames[:max_frames]
-    if not frames:
-        raise RuntimeError(f"sin frames en {dir_img}")
+
+def iter_video(cap,total):
+    """(n_frame,img) de un .mp4; n_frame desde 1 igual que process_video."""
+    i=0
+    while i<total:
+        ok,img=cap.read()
+        if not ok:
+            break
+        i+=1
+        yield i,img
+    cap.release()
+
+
+def generar(nombre_config,nombre_seq,focus_id,fps,max_frames,
+            dataset="visdrone",split=None,focus_longest=False,
+            video=None,results=None,nombre=None):
+    if video:
+        #Fase 5: fuente .mp4 + results.txt de process_video
+        ruta_tracks=Path(results)
+        if not ruta_tracks.exists():
+            raise FileNotFoundError(ruta_tracks)
+        cap=cv2.VideoCapture(str(video))
+        if not cap.isOpened():
+            raise RuntimeError(f"no se pudo abrir {video}")
+        total=int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+        if max_frames:
+            total=min(total,max_frames)
+        fps=fps or cap.get(cv2.CAP_PROP_FPS) or 30.0
+        ancho=int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+        alto=int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+        #nombre por defecto: carpeta del results.txt (runs/video/dji_video01 -> dji_video01)
+        nombre=nombre or ruta_tracks.parent.name
+        #carpeta de salida: results/videos/jetson_foco/
+        dataset,split,nombre_config,nombre_seq="jetson_foco","-","A",nombre
+        fuente=iter_video(cap,total)
+    else:
+        mot_dir,tracking_dir,split_def=DATASETS[dataset]
+        split=split or split_def
+        dir_config=tracking_dir/CONFIGS[nombre_config]
+        ruta_tracks=dir_config/split/f"{nombre_seq}.txt"
+        if not ruta_tracks.exists():
+            raise FileNotFoundError(ruta_tracks)
+
+        dir_img=mot_dir/split/nombre_seq/"img1"
+        frames=sorted(dir_img.glob("*.jpg"))
+        if max_frames:
+            frames=frames[:max_frames]
+        if not frames:
+            raise RuntimeError(f"sin frames en {dir_img}")
+        total=len(frames)
+        #sin --fps se conserva el valor anterior (30)
+        fps=fps or 30
+        alto,ancho=cv2.imread(str(frames[0])).shape[:2]
+        fuente=iter_imagenes(frames)
 
     por_frame=leer_tracks(ruta_tracks)
     if focus_longest:
         focus_id,n=id_mas_largo(por_frame)
         print(f"ID con el recorrido mas largo: #{focus_id} ({n} frames)")
 
-    alto,ancho=cv2.imread(str(frames[0])).shape[:2]
-
     sufijo=f"_foco{focus_id}" if focus_id is not None else "_normal"
-    ruta_salida=OUT_DIR/dataset/f"{nombre_config}_{nombre_seq}{sufijo}.mp4"
+    if video:
+        ruta_salida=OUT_DIR/dataset/f"{nombre}{sufijo}.mp4"
+    else:
+        ruta_salida=OUT_DIR/dataset/f"{nombre_config}_{nombre_seq}{sufijo}.mp4"
     ruta_salida.parent.mkdir(parents=True,exist_ok=True)
 
     fourcc=cv2.VideoWriter_fourcc(*"mp4v")
@@ -155,13 +209,10 @@ def generar(nombre_config,nombre_seq,focus_id,fps,max_frames,
     print(f"config   : {nombre_config}")
     print(f"secuencia: {nombre_seq}  {ancho}x{alto}")
     print(f"modo     : {'foco ID '+str(focus_id) if focus_id is not None else 'normal'}")
-    print(f"frames   : {len(frames)} a {fps} fps\n")
+    print(f"frames   : {total} a {fps:.2f} fps\n")
 
-    for i,ruta in enumerate(frames,start=1):
-        img=cv2.imread(str(ruta))
-        if img is None:
-            raise RuntimeError(f"no se pudo leer {ruta}")
-
+    n_escritos=0
+    for i,img in fuente:
         tracks=por_frame.get(i,[])
 
         if focus_id is None:
@@ -185,21 +236,22 @@ def generar(nombre_config,nombre_seq,focus_id,fps,max_frames,
                 n_objetivo+=1
 
         # HUD: contexto minimo en la esquina
-        hud=f"frame {i}/{len(frames)}  objetos: {len(tracks)}"
+        hud=f"frame {i}/{total}  objetos: {len(tracks)}"
         if focus_id is not None:
             hud+=f"  |  foco #{focus_id}"
         cv2.putText(img,hud,(10,25),cv2.FONT_HERSHEY_SIMPLEX,
                     0.6,(255,255,255),2,cv2.LINE_AA)
 
         writer.write(img)
+        n_escritos+=1
 
         if i%100==0:
-            print(f"  {i}/{len(frames)}")
+            print(f"  {i}/{total}")
 
     writer.release()
 
     if focus_id is not None:
-        print(f"\nel ID {focus_id} aparece en {n_objetivo}/{len(frames)} frames")
+        print(f"\nel ID {focus_id} aparece en {n_objetivo}/{n_escritos} frames")
     print(f"video: {ruta_salida}")
 
 
@@ -208,16 +260,26 @@ def main():
     ap.add_argument("--dataset",default="visdrone",choices=list(DATASETS))
     ap.add_argument("--split",default=None,help="por defecto: val (visdrone) o all (uavdt)")
     ap.add_argument("--config",default="A",choices=list(CONFIGS))
-    ap.add_argument("--seq",required=True)
+    ap.add_argument("--seq",default=None,help="obligatorio sin --video")
     ap.add_argument("--focus-id",type=int,default=None)
     ap.add_argument("--focus-longest",action="store_true",
                     help="modo foco sobre el ID con el recorrido mas largo")
-    ap.add_argument("--fps",type=int,default=30)
+    #None -> fps del .mp4, o 30 con img1/ (valor anterior)
+    ap.add_argument("--fps",type=float,default=None)
     ap.add_argument("--max-frames",type=int,default=None)
+    #Fase 5 (paso 8.3): video propio
+    ap.add_argument("--video",default=None,help=".mp4 original (p. ej. data/dji_mini3/video01.mp4)")
+    ap.add_argument("--results",default=None,help="results.txt de process_video (obligatorio con --video)")
+    ap.add_argument("--name",default=None,help="nombre de salida; por defecto la carpeta del results.txt")
     args=ap.parse_args()
+    if args.video and not args.results:
+        ap.error("--video requiere --results")
+    if not args.video and not args.seq:
+        ap.error("--seq es obligatorio sin --video")
 
     generar(args.config,args.seq,args.focus_id,args.fps,args.max_frames,
-            args.dataset,args.split,args.focus_longest)
+            args.dataset,args.split,args.focus_longest,
+            args.video,args.results,args.name)
 
 
 if __name__=="__main__":
