@@ -1,0 +1,12 @@
+clase,clase_id,eventos,pct
+car,4,4073,49.5
+pedestrian,1,3103,37.71
+van,5,351,4.27
+people,2,239,2.9
+motor,10,171,2.08
+truck,6,140,1.7
+bicycle,3,66,0.8
+bus,9,58,0.7
+tricycle,7,23,0.28
+awning-tricycle,8,4,0.05
+TOTAL,,8228,100.0

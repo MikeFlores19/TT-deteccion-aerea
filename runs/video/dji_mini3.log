@@ -1,0 +1,83 @@
+nohup: ignoring input
+== video01 18:45:04
+total: 1221 frames  9187 tracks-frame  123 IDs unicos  119 eventos
+FPS pipeline=40.31  FPS total=20.04
+== video02 18:46:10
+total: 1000 frames  5911 tracks-frame  72 IDs unicos  66 eventos
+FPS pipeline=42.31  FPS total=20.29
+== video03 18:47:05
+total: 1074 frames  3555 tracks-frame  96 IDs unicos  89 eventos
+FPS pipeline=43.58  FPS total=20.37
+== video04 18:48:03
+total: 724 frames  5446 tracks-frame  81 IDs unicos  74 eventos
+FPS pipeline=40.94  FPS total=19.06
+== video05 18:48:46
+total: 1473 frames  13477 tracks-frame  171 IDs unicos  164 eventos
+FPS pipeline=37.31  FPS total=20.6
+== video06 18:50:03
+total: 1131 frames  9028 tracks-frame  193 IDs unicos  178 eventos
+FPS pipeline=39.99  FPS total=19.53
+== video07 18:51:06
+total: 2578 frames  18886 tracks-frame  226 IDs unicos  214 eventos
+FPS pipeline=41.87  FPS total=18.94
+== video08 18:53:28
+total: 1937 frames  14242 tracks-frame  215 IDs unicos  189 eventos
+FPS pipeline=40.72  FPS total=21.72
+== video09 18:55:03
+total: 1632 frames  13281 tracks-frame  237 IDs unicos  217 eventos
+FPS pipeline=40.04  FPS total=21.39
+== video10 18:56:24
+total: 5126 frames  66028 tracks-frame  842 IDs unicos  600 eventos
+FPS pipeline=37.13  FPS total=18.6
+== video11 19:01:05
+total: 2169 frames  38361 tracks-frame  447 IDs unicos  344 eventos
+FPS pipeline=34.81  FPS total=16.85
+== video12 19:03:20
+total: 2158 frames  63173 tracks-frame  311 IDs unicos  285 eventos
+FPS pipeline=28.36  FPS total=16.41
+== video13 19:05:37
+total: 1986 frames  71620 tracks-frame  393 IDs unicos  356 eventos
+FPS pipeline=28.18  FPS total=15.25
+== video15 19:07:52
+total: 2441 frames  75245 tracks-frame  615 IDs unicos  516 eventos
+FPS pipeline=28.65  FPS total=15.16
+== video16 19:10:39
+total: 2441 frames  59470 tracks-frame  382 IDs unicos  303 eventos
+FPS pipeline=32.34  FPS total=16.12
+== video17 19:13:19
+total: 2422 frames  62461 tracks-frame  696 IDs unicos  548 eventos
+FPS pipeline=29.82  FPS total=15.33
+== video18 19:16:02
+total: 1418 frames  24295 tracks-frame  240 IDs unicos  225 eventos
+FPS pipeline=34.76  FPS total=16.65
+== video19 19:17:33
+total: 2596 frames  81731 tracks-frame  530 IDs unicos  497 eventos
+FPS pipeline=28.86  FPS total=15.18
+== video20 19:20:29
+total: 2667 frames  57280 tracks-frame  517 IDs unicos  391 eventos
+FPS pipeline=32.8  FPS total=16.62
+== video21 19:23:15
+total: 5694 frames  144237 tracks-frame  655 IDs unicos  516 eventos
+FPS pipeline=33.08  FPS total=16.53
+== video23 19:29:05
+total: 1221 frames  61434 tracks-frame  643 IDs unicos  492 eventos
+FPS pipeline=22.26  FPS total=12.6
+== video24 19:30:47
+total: 1317 frames  38152 tracks-frame  327 IDs unicos  279 eventos
+FPS pipeline=29.26  FPS total=16.01
+== video25 19:32:15
+total: 1577 frames  55166 tracks-frame  471 IDs unicos  360 eventos
+FPS pipeline=26.76  FPS total=14.76
+== video26 19:34:08
+total: 1776 frames  75885 tracks-frame  769 IDs unicos  616 eventos
+FPS pipeline=23.84  FPS total=13.5
+== video27 19:36:25
+total: 2398 frames  16325 tracks-frame  226 IDs unicos  202 eventos
+FPS pipeline=41.78  FPS total=21.98
+== video28 19:38:19
+total: 2583 frames  16350 tracks-frame  136 IDs unicos  121 eventos
+FPS pipeline=42.59  FPS total=21.37
+== video29 19:40:25
+total: 7623 frames  43674 tracks-frame  285 IDs unicos  267 eventos
+FPS pipeline=42.97  FPS total=19.49
+TERMINADO 19:47:02

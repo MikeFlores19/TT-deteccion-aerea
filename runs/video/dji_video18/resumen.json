@@ -1,0 +1,36 @@
+{
+  "fuente": "data/dji_mini3/video18.mp4",
+  "tipo": "video",
+  "resolucion": [
+    1920,
+    1080
+  ],
+  "fps_fuente": 29.97,
+  "pesos": "runs/yolov8n/yolov8n_mosaic10_20260606_0315/weights/best_736x1280.engine",
+  "imgsz": [
+    736,
+    1280
+  ],
+  "frames": 1418,
+  "tracks_frame": 24295,
+  "ids_unicos": 240,
+  "eventos": 225,
+  "min_frames": 3,
+  "segundos": {
+    "lectura": 2.17,
+    "deteccion": 24.71,
+    "tracking": 13.91,
+    "video": 44.06,
+    "total": 85.16
+  },
+  "ms_por_frame": {
+    "lectura": 1.53,
+    "deteccion": 17.43,
+    "tracking": 9.81,
+    "video": 31.07
+  },
+  "fps_pipeline": 34.76,
+  "fps_total": 16.65,
+  "video_anotado": "results/videos/jetson/dji_video18_normal.mp4",
+  "nota": "Tiempos de referencia del pipeline; el benchmark formal es el paso 6."
+}
