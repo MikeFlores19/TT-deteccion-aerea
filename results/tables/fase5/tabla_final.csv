@@ -13,11 +13,11 @@ bloque,metrica,laptop,jetson,meta,cumple,fuente
 "Velocidad config A (frames en RAM; Jetson MAXN_SUPER, TRT 736x1280)",Detector YOLOv8n: pre+inferencia+post (ms / FPS),,16.6 ms / 60 FPS,>= 30 FPS,sí,"secuencia densa, jetson_clocks"
 "Velocidad config A (frames en RAM; Jetson MAXN_SUPER, TRT 736x1280)",Inferencia del modelo (ms),"5.95 (.pt, 1280)","6.81 (TRT FP16, 736x1280)",,,la laptop se midio en la Fase 2 (.pt)
 "Velocidad config A (frames en RAM; Jetson MAXN_SUPER, TRT 736x1280)","Tracking ByteTrack, secuencia densa (ms)",6.14,16.42,,,
-"Velocidad config A (frames en RAM; Jetson MAXN_SUPER, TRT 736x1280)",FPS leyendo .mp4 (17 videos de test-dev),,22.7 (sin jetson_clocks 13.2),,,
+"Velocidad config A (frames en RAM; Jetson MAXN_SUPER, TRT 736x1280)",FPS leyendo .mp4 (17 videos de test-dev),,22.6 (sin jetson_clocks 13.1),,,
 Recursos en la Jetson (jetson_clocks),Potencia media (W): densa / dispersa / .mp4 / reposo,,9.0 / 10.5 / 8.7 / 5.4,,,
 Recursos en la Jetson (jetson_clocks),Energía por frame (J): densa / dispersa / .mp4,,0.298 / 0.228 / 0.387,,,
 Recursos en la Jetson (jetson_clocks),Temperatura máxima Tj (°C),,56.0,,,
-Recursos en la Jetson (jetson_clocks),Memoria GPU del modelo (MB),93.1 (VRAM total del proceso),25.5 (torch max),,,
+Recursos en la Jetson (jetson_clocks),Memoria GPU del modelo (MB),,25.5 (torch max),,,
 Recursos en la Jetson (jetson_clocks),RAM del sistema (MB): densa / dispersa / .mp4,,2449 / 4230 / 1587 de 8 GB,,,
 Campo: 27 videos propios del DJI Mini 3 (Jetson),Videos / duración / frames,,"27 / 33.1 min / 62,383",,,
 Campo: 27 videos propios del DJI Mini 3 (Jetson),Detecciones con ID (tracks-frame),,"1,143,900",,,
@@ -29,6 +29,6 @@ Georreferenciación de los videos propios,Sincronización B (clip vs original),,
 Georreferenciación de los videos propios,Validación sintética (verdad conocida),,6/6 casos pasan,,,
 Georreferenciación de los videos propios,Detecciones georreferenciadas,,"710,062/1,143,900 (62.1%)",,,
 Georreferenciación de los videos propios,Objetos georreferenciados,,"5,040",,,
-Georreferenciación de los videos propios,Error estimado mediano por clip (m),,2.5-8.2,<= 10 por detección,sí,"propagacion: pitch 1 deg, rumbo 3 deg, altura 0.5 m, GPS 1.5 m"
+Georreferenciación de los videos propios,Error estimado mediano por clip (m),,2.5-8.2,,,"filtro de validez <= 10 m por deteccion; propagacion: pitch 1 deg, rumbo 3 deg, altura 0.5 m, GPS 1.5 m"
 Georreferenciación de los videos propios,"Dispersión por objeto, mediana (m)",,0.66,,,"repetibilidad, no exactitud"
 Georreferenciación de los videos propios,Zona válida de la imagen (%),,52-98,,,camara inclinada (gimbal -10 a -26 deg): vista oblicua

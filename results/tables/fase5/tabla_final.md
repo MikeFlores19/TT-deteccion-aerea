@@ -31,7 +31,7 @@ Laptop: RTX 4050 (.pt). Jetson: Orin Nano 8GB, MAXN_SUPER, TensorRT FP16 736x128
 | Detector YOLOv8n: pre+inferencia+post (ms / FPS) |  | 16.6 ms / 60 FPS | >= 30 FPS | sí | secuencia densa, jetson_clocks |
 | Inferencia del modelo (ms) | 5.95 (.pt, 1280) | 6.81 (TRT FP16, 736x1280) |  |  | la laptop se midio en la Fase 2 (.pt) |
 | Tracking ByteTrack, secuencia densa (ms) | 6.14 | 16.42 |  |  |  |
-| FPS leyendo .mp4 (17 videos de test-dev) |  | 22.7 (sin jetson_clocks 13.2) |  |  |  |
+| FPS leyendo .mp4 (17 videos de test-dev) |  | 22.6 (sin jetson_clocks 13.1) |  |  |  |
 
 ## Recursos en la Jetson (jetson_clocks)
 
@@ -40,7 +40,7 @@ Laptop: RTX 4050 (.pt). Jetson: Orin Nano 8GB, MAXN_SUPER, TensorRT FP16 736x128
 | Potencia media (W): densa / dispersa / .mp4 / reposo |  | 9.0 / 10.5 / 8.7 / 5.4 |  |  |  |
 | Energía por frame (J): densa / dispersa / .mp4 |  | 0.298 / 0.228 / 0.387 |  |  |  |
 | Temperatura máxima Tj (°C) |  | 56.0 |  |  |  |
-| Memoria GPU del modelo (MB) | 93.1 (VRAM total del proceso) | 25.5 (torch max) |  |  |  |
+| Memoria GPU del modelo (MB) |  | 25.5 (torch max) |  |  |  |
 | RAM del sistema (MB): densa / dispersa / .mp4 |  | 2449 / 4230 / 1587 de 8 GB |  |  |  |
 
 ## Campo: 27 videos propios del DJI Mini 3 (Jetson)
@@ -62,6 +62,6 @@ Laptop: RTX 4050 (.pt). Jetson: Orin Nano 8GB, MAXN_SUPER, TensorRT FP16 736x128
 | Validación sintética (verdad conocida) |  | 6/6 casos pasan |  |  |  |
 | Detecciones georreferenciadas |  | 710,062/1,143,900 (62.1%) |  |  |  |
 | Objetos georreferenciados |  | 5,040 |  |  |  |
-| Error estimado mediano por clip (m) |  | 2.5-8.2 | <= 10 por detección | sí | propagacion: pitch 1 deg, rumbo 3 deg, altura 0.5 m, GPS 1.5 m |
+| Error estimado mediano por clip (m) |  | 2.5-8.2 |  |  | filtro de validez <= 10 m por deteccion; propagacion: pitch 1 deg, rumbo 3 deg, altura 0.5 m, GPS 1.5 m |
 | Dispersión por objeto, mediana (m) |  | 0.66 |  |  | repetibilidad, no exactitud |
 | Zona válida de la imagen (%) |  | 52-98 |  |  | camara inclinada (gimbal -10 a -26 deg): vista oblicua |

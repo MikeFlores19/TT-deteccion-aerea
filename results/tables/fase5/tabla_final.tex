@@ -27,13 +27,13 @@ FPS det+track, secuencia dispersa 4K ($\sim$102 obj/frame) & 106.0 & 46.0 (sin j
 Detector YOLOv8n: pre+inferencia+post (ms / FPS) &  & 16.6 ms / 60 FPS & $\geq$ 30 FPS (sí) \\
 Inferencia del modelo (ms) & 5.95 (.pt, 1280) & 6.81 (TRT FP16, 736x1280) &  \\
 Tracking ByteTrack, secuencia densa (ms) & 6.14 & 16.42 &  \\
-FPS leyendo .mp4 (17 videos de test-dev) &  & 22.7 (sin jetson\_clocks 13.2) &  \\
+FPS leyendo .mp4 (17 videos de test-dev) &  & 22.6 (sin jetson\_clocks 13.1) &  \\
 \midrule
 \multicolumn{4}{l}{\textit{Recursos en la Jetson (jetson\_clocks)}} \\
 Potencia media (W): densa / dispersa / .mp4 / reposo &  & 9.0 / 10.5 / 8.7 / 5.4 &  \\
 Energía por frame (J): densa / dispersa / .mp4 &  & 0.298 / 0.228 / 0.387 &  \\
 Temperatura máxima Tj (°C) &  & 56.0 &  \\
-Memoria GPU del modelo (MB) & 93.1 (VRAM total del proceso) & 25.5 (torch max) &  \\
+Memoria GPU del modelo (MB) &  & 25.5 (torch max) &  \\
 RAM del sistema (MB): densa / dispersa / .mp4 &  & 2449 / 4230 / 1587 de 8 GB &  \\
 \midrule
 \multicolumn{4}{l}{\textit{Campo: 27 videos propios del DJI Mini 3 (Jetson)}} \\
@@ -44,12 +44,12 @@ FPS del pipeline det+track (media) &  & 34.4 (18/27 videos $\geq$ 30) &  \\
 FPS total con lectura y escritura del video anotado &  & 17.5 &  \\
 \midrule
 \multicolumn{4}{l}{\textit{Georreferenciación de los videos propios}} \\
-Sincronización A (original vs registro de vuelo) &  & 14 originales; |A-isVideo| $\leq$ 0.64 s; RMSE H $\leq$ 0.05 m &  \\
+Sincronización A (original vs registro de vuelo) &  & 14 originales; $|$A-isVideo$|$ $\leq$ 0.64 s; RMSE H $\leq$ 0.05 m &  \\
 Sincronización B (clip vs original) &  & 27/27 OK; residual 1-6 ms; velocidad 1.0000-1.0000 &  \\
 Validación sintética (verdad conocida) &  & 6/6 casos pasan &  \\
 Detecciones georreferenciadas &  & 710,062/1,143,900 (62.1\%) &  \\
 Objetos georreferenciados &  & 5,040 &  \\
-Error estimado mediano por clip (m) &  & 2.5-8.2 & $\leq$ 10 por detección (sí) \\
+Error estimado mediano por clip (m) &  & 2.5-8.2 &  \\
 Dispersión por objeto, mediana (m) &  & 0.66 &  \\
 Zona válida de la imagen (\%) &  & 52-98 &  \\
 \bottomrule

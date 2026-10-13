@@ -102,7 +102,8 @@ def main():
          f"{jd['inferencia_ms']:.2f} (TRT FP16, 736x1280)",fuente="la laptop se midio en la Fase 2 (.pt)")
     fila(b,"Tracking ByteTrack, secuencia densa (ms)",f"{lap_fps[densa]['tracking_ms']:.2f}",f"{jd['tracking_ms']:.2f}")
     vc,vd=sel("video","jetson_clocks"),sel("video","default")
-    fila(b,"FPS leyendo .mp4 (17 videos de test-dev)","",f"{vc['fps']:.1f} (sin jetson_clocks {vd['fps']:.1f})")
+    #fps_reloj (frames / tiempo total), la misma cifra que usa el resto del proyecto
+    fila(b,"FPS leyendo .mp4 (17 videos de test-dev)","",f"{vc['fps_reloj']:.1f} (sin jetson_clocks {vd['fps_reloj']:.1f})")
 
     # ------------------------------------------------------------------ recursos
     b="Recursos en la Jetson (jetson_clocks)"
@@ -113,8 +114,8 @@ def main():
     fila(b,"Energía por frame (J): densa / dispersa / .mp4","",
          f"{jd['j_por_frame']:.3f} / {jx['j_por_frame']:.3f} / {vc['j_por_frame']:.3f}")
     fila(b,"Temperatura máxima Tj (°C)","",f"{max(jd['tj_max_c'],jx['tj_max_c'],vc['tj_max_c']):.1f}")
-    fila(b,"Memoria GPU del modelo (MB)",f"{lap_fps[densa]['vram_mb']:.1f} (VRAM total del proceso)",
-         f"{jd['torch_max_mem_mb']:.1f} (torch max)")
+    #la VRAM de la laptop (Fase 3) es la medida defectuosa que no se presenta como consumo en operacion
+    fila(b,"Memoria GPU del modelo (MB)","",f"{jd['torch_max_mem_mb']:.1f} (torch max)")
     fila(b,"RAM del sistema (MB): densa / dispersa / .mp4","",
          f"{jd['ram_sistema_media_mb']:.0f} / {jx['ram_sistema_media_mb']:.0f} / {vc['ram_sistema_media_mb']:.0f} de 8 GB")
 
@@ -151,8 +152,9 @@ def main():
     g,d=int(rg["georreferenciadas"].sum()),int(rg["detecciones"].sum())
     fila(b,"Detecciones georreferenciadas","",f"{g:,}/{d:,} ({100*g/d:.1f}%)")
     fila(b,"Objetos georreferenciados","",f"{len(ob):,}")
+    #<= 10 m es el filtro de validez del 9.3 (se cumple por construccion), no una meta del protocolo
     fila(b,"Error estimado mediano por clip (m)","",f"{rg['error_mediano_m'].min():.1f}-{rg['error_mediano_m'].max():.1f}",
-         "<= 10 por detección","sí",fuente="propagacion: pitch 1 deg, rumbo 3 deg, altura 0.5 m, GPS 1.5 m")
+         fuente="filtro de validez <= 10 m por deteccion; propagacion: pitch 1 deg, rumbo 3 deg, altura 0.5 m, GPS 1.5 m")
     fila(b,"Dispersión por objeto, mediana (m)","",f"{ob['dispersion_m'].median():.2f}",fuente="repetibilidad, no exactitud")
     fila(b,"Zona válida de la imagen (%)","",f"{zv['pct_zona_valida'].min():.0f}-{zv['pct_zona_valida'].max():.0f}",
          fuente="camara inclinada (gimbal -10 a -26 deg): vista oblicua")
@@ -173,7 +175,7 @@ def main():
     #latex (booktabs): sin la columna de notas
     esc=lambda s:str(s).replace("\\","\\textbackslash{}").replace("%","\\%").replace("_","\\_") \
         .replace(">=","$\\geq$").replace("<=","$\\leq$").replace("&","\\&").replace("#","\\#") \
-        .replace("~","$\\sim$")
+        .replace("~","$\\sim$").replace("|","$|$")
     tex=["% Requiere \\usepackage{booktabs} y \\usepackage{array}",
          "\\begin{table}[htbp]","\\centering","\\scriptsize",
          "\\caption{Resultados de la Fase 5: configuración A (YOLOv8n + ByteTrack) en la laptop (RTX 4050) "
