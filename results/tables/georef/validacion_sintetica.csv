@@ -1,0 +1,7 @@
+prueba,caso,esperado,obtenido,valor_real_s,valor_medido_s,error_ms,pasa
+B,exacto_48fps,OK,OK,4.1708,4.1708,0.01,True
+B,exacto_a_30fps_A,OK,OK,10.4271,10.4313,4.2,True
+B,exacto_a_30fps_B,OK,OK,6.9444,6.9487,4.3,True
+B,acelerado_2x,REVISAR,REVISAR,,,,True
+B,dos_pedazos,REVISAR,REVISAR,,0.9548,,True
+A,subtitulos_desfasados,OK,OK,9.37,9.36,10.0,True
