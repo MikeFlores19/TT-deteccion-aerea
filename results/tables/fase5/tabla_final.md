@@ -57,7 +57,7 @@ Laptop: RTX 4050 (.pt). Jetson: Orin Nano 8GB, MAXN_SUPER, TensorRT FP16 736x128
 
 | Métrica | Laptop | Jetson | Meta | Cumple | Nota |
 |---|---|---|---|---|---|
-| Sincronización A (original vs registro de vuelo) |  | 14 originales; |A-isVideo| <= 0.64 s; RMSE H <= 0.05 m |  |  |  |
+| Sincronización A (original vs registro de vuelo) |  | 14 originales; \|A-isVideo\| <= 0.64 s; RMSE H <= 0.05 m |  |  |  |
 | Sincronización B (clip vs original) |  | 27/27 OK; residual 1-6 ms; velocidad 1.0000-1.0000 |  |  |  |
 | Validación sintética (verdad conocida) |  | 6/6 casos pasan |  |  |  |
 | Detecciones georreferenciadas |  | 710,062/1,143,900 (62.1%) |  |  |  |

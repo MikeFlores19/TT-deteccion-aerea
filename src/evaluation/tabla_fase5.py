@@ -163,13 +163,14 @@ def main():
     OUT_DIR.mkdir(parents=True,exist_ok=True)
     res.to_csv(OUT_DIR/"tabla_final.csv",index=False)
 
-    #markdown: una tabla por bloque
+    #markdown: una tabla por bloque; la barra se escapa porque en una tabla separa columnas
+    mdesc=lambda s:str(s).replace("|","\\|")
     md=["# Fase 5 - Tabla final (config A: YOLOv8n + ByteTrack)\n",
         "Laptop: RTX 4050 (.pt). Jetson: Orin Nano 8GB, MAXN_SUPER, TensorRT FP16 736x1280.\n"]
     for bloque,g in res.groupby("bloque",sort=False):
         md.append(f"\n## {bloque}\n\n| Métrica | Laptop | Jetson | Meta | Cumple | Nota |\n|---|---|---|---|---|---|")
         for r in g.itertuples():
-            md.append(f"| {r.metrica} | {r.laptop} | {r.jetson} | {r.meta} | {r.cumple} | {r.fuente} |")
+            md.append("| "+" | ".join(mdesc(x) for x in (r.metrica,r.laptop,r.jetson,r.meta,r.cumple,r.fuente))+" |")
     (OUT_DIR/"tabla_final.md").write_text("\n".join(md)+"\n",encoding="utf-8")
 
     #latex (booktabs): sin la columna de notas
